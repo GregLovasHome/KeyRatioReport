@@ -1,0 +1,3457 @@
+<apex:page controller="Report_KeyRatioEmployees" tabStyle="Reports__tab" cache="false" readonly="false"  applyBodyTag="false" docType="html-5.0">
+<html>
+    <head>
+
+<!--  FONT AWESOME COMPONENTS -->
+<apex:stylesheet value="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+
+<!--  DATATABLE MISC COMPONENTS WHICH INCLUDES JQUERY COMPONENT-->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-2.2.4/jszip-3.1.3/pdfmake-0.1.27/dt-1.10.15/b-1.3.1/b-colvis-1.3.1/b-html5-1.3.1/b-print-1.3.1/cr-1.3.3/rr-1.2.0/sc-1.4.2/datatables.min.css"/>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-2.2.4/jszip-3.1.3/pdfmake-0.1.27/dt-1.10.15/b-1.3.1/b-colvis-1.3.1/b-html5-1.3.1/b-print-1.3.1/cr-1.3.3/rr-1.2.0/sc-1.4.2/datatables.min.js"></script>
+
+<!--  JQUERY UI COMPONENTS -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+
+<!--  BOOTSTRAP COMPONENTS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script src="https:////cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/vfs_fonts.js" />
+ <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js" />
+ 
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.35.4/css/bootstrap-dialog.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.35.4/js/bootstrap-dialog.min.js"></script>
+
+<script src="/soap/ajax/33.0/connection.js" type="text/javascript"></script>
+<script src="/soap/ajax/33.0/apex.js" type="text/javascript"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/Sortable/1.5.1/Sortable.min.js"></script>
+<script src="//cdn.jsdelivr.net/sortable/latest/Sortable.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sortable/0.9.13/jquery-sortable-min.js" />
+
+<!-- DevExtreme themes -->
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/16.2.7/css/dx.common.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/16.2.7/css/dx.light.css" />
+
+<!-- A DevExtreme library -->
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/16.2.7/js/dx.all.js"></script>
+<style>
+
+.tooltip > .tooltip-inner {
+    background-color: #f9f9d4; 
+    color: #000000; 
+    border: 1px solid black;
+    padding: 10px;
+    font-size: 13px;
+    
+}
+.tooltip.in{opacity:1!important;}
+
+body.dragging, body.dragging * {
+  cursor: move !important;
+}
+
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
+}
+
+ol.example li.placeholder {
+  position: relative;
+  /** More li styles **/
+}
+ol.example li.placeholder:before {
+  position: absolute;
+  /** Define arrowhead **/
+}
+
+.modal-lg {
+          width: 80%; /* New width for default modal */
+}
+
+
+body {background-color: #ddd;}
+
+	.titleHeading {font-size:12pt; font-weight:bold; color:DimGray;}
+
+
+
+@media (min-width: 800px) 
+{
+
+    .brand-pills > li > a {
+        border-top-right-radius: 0px;
+    	border-bottom-right-radius: 0px;
+    }
+    
+    li.brand-nav.active a:after{
+    	content: " ";
+    	display: block;
+    	width: 0;
+    	height: 0;
+    	border-top: 20px solid transparent;
+    	border-bottom: 20px solid transparent;
+    	border-left: 9px solid #428bca;
+    	position: absolute;
+    	top: 50%;
+    	margin-top: -20px;
+    	left: 100%;
+    	z-index: 2;
+    }
+}	
+
+.table-buttons{
+	color: #FF0000;
+	background-color: #CCCCCC;
+	border-radius: 15px;
+}
+
+.fldHidden {
+	color:#CCCCCC;
+}
+
+.dtlMHeader {
+	color:SteelBlue ;
+}
+
+.deltaPlus
+{
+	background-color: #b9f7c6;
+}
+
+.deltaNeg
+{
+	background-color: #f7b9c4;
+}
+
+.dtlMBodyTblHeader {
+    background-color: SteelBlue;
+    color: white;
+}
+
+.dtlWellHeader
+{
+	color: DarkSlateGray;
+	margin-bottom: 10px;
+	font: 14px arial;
+}
+.dtlMBodyInfo {
+	color: SlateGrey;
+	margin-bottom: 20px;
+	font: 13px arial;
+}
+
+.sectionHeading {
+	color: DarkSlateGray;
+	margin-bottom: 10px;
+	margin-top: 15px;
+	font: 18px arial;
+	text-align: center;
+}
+
+.sectionSubHeading{
+	color: DarkSlateGray;
+	margin-bottom: 10px;
+	font: 14px arial;
+	text-align: center;
+}
+
+.startDate {
+	margin-bottom: 5px;
+}
+
+.searchFrom {
+	margin-bottom: 10px;
+}
+
+
+@media (min-width: 768px) {
+  .modal-xl {
+    width: 98%;
+   max-width:1200px;
+  }
+}
+
+.setupButton {
+	float: right; z-index:3;position:absolute; right:20px; top:26px;
+    color: #FFFFFF;
+    background-color: #2f79ba;
+    border-color: #2f79ba; 
+}
+.btn.setupButton:hover, .setupButton:focus {
+    color: #FFFFFF;
+    background-color: #1b4282;
+    border-color: #837171; /*set the color you want here*/
+}
+
+.float_center {
+  float: right;
+
+  position: relative;
+  left: -50%; /* or right 50% */
+  text-align: left;
+  }
+  
+.float_center > .child {
+  position: relative;
+  left: 50%;
+}
+
+.rounded {
+  border-radius: 10px;
+  background: #CCCCCC; // without a background or border applied you won't be able to see if its rounded
+}
+
+.panelNoBorder {
+    border: 0;
+}
+
+.panelShade {
+   background:#afc6e0;
+}
+
+.controls {
+  margin-top: 5px;
+  margin-right: 5px;
+  margin-bottom: 10px;
+}
+
+.collapse-group {
+  padding: 5px;
+  border: 0;
+  margin-bottom: 10px;
+}
+
+.panel-title .trigger:before {
+  content: '\e082';
+  font-family: 'Glyphicons Halflings';
+  vertical-align: text-bottom;
+}
+
+.panel-title .trigger.collapsed:before {
+  content: '\e081';
+}
+
+a:hover, a:visited, a:link, a:active {
+  text-decoration: none;
+}
+
+#tblFields {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+#tblFields td, #tblFields th {
+    border: 1px solid #ddd;
+    padding: 4px;
+}
+
+#tblFields4 tr:nth-child(even){background-color: #efefdc;}
+
+
+#tblFields th {
+    padding-top: 9px;
+    padding-bottom: 9px;
+    text-align: center;
+    font: 15px arial;
+    background-color: #fcfce5;
+    color: black;
+}
+
+.simpleDiv {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    width: 98%;
+    margin-bottom: 20px;
+}
+
+.modal-body {
+    max-height: calc(100vh - 210px);
+    overflow-y: auto;
+}
+
+
+</style>
+
+     
+<script type="text/javascript">
+
+//parse entered date. return NaN if invalid
+
+function stringToDate(s) 
+{
+  console.log('in stringToDate - s = ' + s);
+  var ret = NaN;
+  var parts = s.split("/");
+  console.log('Parts = ' + parts);
+  date = new Date(parts[2], parts[0], parts[1]);
+  if (!isNaN(date.getTime())) 
+  {
+    ret = date;
+  }
+  console.log('Returning (' + ret + ')');
+  return ret;
+}
+
+function timeConvert(n) 
+{
+var num = n * 60;
+var hours = (num / 60);
+var rhours = Math.floor(hours);
+var minutes = (hours - rhours) * 60;
+var rminutes = Math.round(minutes);
+return  rhours + ":" + rminutes;
+}
+
+function setAllCB( officeId )
+{
+	var checkboxes = $('input:checkbox.empId'+officeId).prop('checked', true);
+}
+
+function setActiveCB( officeId )
+{
+	var checkboxes = $('input:checkbox.empIdActive_'+officeId).prop('checked', true);
+}
+
+function setInactiveCB( officeId )
+{
+	var checkboxes = $('input:checkbox.empIdInactive_'+officeId).prop('checked', true);
+}
+
+function clearAllCB( officeId )
+{
+	var checkboxes = $('input:checkbox.empId'+officeId).prop('checked', false);
+}
+
+function clearActiveCB( officeId )
+{
+	var checkboxes = $('input:checkbox.empIdActive_'+officeId).prop('checked', false);
+}
+
+function clearInactiveCB( officeId )
+{
+	var checkboxes = $('input:checkbox.empIdInactive_'+officeId).prop('checked', false);
+}
+
+function setFocusOnLoad() {}
+
+var tblCols = {};
+var fldList = {};
+var fldLst = new Object;
+var fldInfo = {!fldJSON};
+var visibility = JSON.parse('{!jsonVisiblity}');    // GET FIELD VISIBILITY MAP VALUES
+var totalWeeks;
+var globalEmpRec;
+	 
+     $ = jQuery.noConflict();
+     $( document ).ready(function() 
+	 {
+	 
+	 	$('#reportDiv').hide();
+	 	
+	 	checkConfiguration();
+	 	
+			//$('.modal-content').resizable({
+			//    //alsoResize: ".modal-dialog",
+			//    minHeight: 300,
+			//    minWidth: 300
+			//});
+			
+			//$('.modal-dialog').draggable();
+			
+			// CHECK IF USER HAS CONFIGURATION RECORD
+			
+			$('#rptSetup').on('show.bs.modal', function () {
+			    $(this).find('.modal-body').css({
+			        'max-height':'100%'
+			    });
+			});	 
+	 
+			$(".searchInput").on("input", function() 
+			{			  
+			  var from = stringToDate($(".searchFrom").val());
+			  var to = stringToDate($(".searchTo").val());
+			  $(".fbody tr").each(function() 
+			  {
+			    var row = $(this);
+			    var date = stringToDate(row.find("td").eq(1).text());
+			    
+			    //show all rows by default
+			    var show = true;
+			
+			    //if from date is valid and row date is less than from date, hide the row
+			    if (from && date < from)
+			      show = false;
+			    
+			    //if to date is valid and row date is greater than to date, hide the row
+			    if (to && date > to)
+			      show = false;
+			
+			    if (show)
+			      row.show();
+			    else
+			      row.hide();
+			  });
+			});
+	 
+	 		inactiveChanged();
+			
+			$(".open-button").on("click", function() {
+			  $('.collapse-group').find('.collapse').collapse('show');
+			});
+			
+			$(".close-button").on("click", function() {
+			  $('.collapse-group').find('.collapse').collapse('hide');
+			});	
+						
+					
+            $("#workingDialog").dialog({
+                autoOpen: false,
+                height: 140,
+                width: 200,
+                modal: true,
+                show: "fade",
+                hide: "fade",
+                closeOnEscape: false,
+                draggable: false,
+                resizable: false
+            });
+            
+    		$('[data-toggle="tooltip"]').tooltip(); 
+           
+            
+	     	if ({!setupRec.filter_Attrition__c} == false)
+	     	{
+	     		$('#filter_Attrition').hide();
+	     	}
+	     	
+	     	if ({!setupRec.filter_Thrilled__c} == false)
+	     	{
+	     		$('#filter_Thrilled').hide();
+	     	}
+	     	
+	        if ({!setupRec.filter_Promoter__c} == false)
+	     	{
+	     		$('#filter_Promoter').hide();
+	     	}
+	 
+	        if ({!setupRec.filter_Job_Costing__c} == false)
+	     	{
+	     		$('#filter_Job_Costing').hide();
+	     	}
+	     	
+	     	if ({!setupRec.filter_MPU__c} == false)
+	     	{
+	     		$('#filter_MPU').hide();
+	     	}
+	     	
+	     	$("#workingDialog").hide();
+	        
+				        
+			buildFieldList();
+	        
+		    var startDtFld = $("#startDateField");
+		    startDtFld.datepicker();
+	        var startDt  = "{!setupRec.val_Hire_Start__c}";
+	        var startUTC = moment.utc(startDt).format("MM/DD/YYYY");		    
+		    startDtFld.datepicker('setDate',  startUTC);
+		    
+           	var endDtFld =$("#endDateField");
+           	endDtFld.datepicker();
+	        var endDt  = "{!setupRec.val_Hire_End__c}";
+	        var endUTC = moment.utc(endDt).format("MM/DD/YYYY");
+	        endDtFld.datepicker('setDate',  endUTC);           	
+           
+	       	$( "#hireStartDateFld" ).datepicker();
+           	$( "#hireEndDateFld" ).datepicker();           
+
+            var reportTable   = $('#report-table');
+            var reportTableDt = reportTable.DataTable();
+            
+            var JSRemote = function () 
+            { 
+            	var self = this;
+            	
+                 
+                 // Query the selected report and display the result
+                 this.runReport = function() 
+                 {
+										
+                 	var startDate = $('#startDateField').datepicker('getDate');
+                    var endDate = $('#endDateField').datepicker('getDate');
+                    
+                    totalWeeks = moment(endDate).diff(moment(startDate), 'weeks');
+					//console.log('Week Total = ' + totalWeeks);
+                    if (startDate== null || endDate==null) 
+                    { 
+                            alert('Start and End dates are required for the report.');
+                            return;
+                    }
+                    
+                    if (startDate > endDate)			
+                    {
+                    	alert('End date should be greater than or equal to the start date.');
+                    	return;
+                    }		
+					
+					var contactIds = '{!selectedEmpIds}';
+					startDateObj = moment(startDate);
+					startDateStr = moment(startDate).format('MM/DD/YYYY');
+					//startDate= startDate.toUTCString();
+                    //endDate = endDate.toUTCString();
+                    endDateStr = moment(endDate).format('MM/DD/YYYY');
+                    
+                    //console.log('Start Date = ' + startDate + ', String = ' + startDateStr);
+                    
+                     Visualforce.remoting.timeout = 120000; // Set timeout to max 120secs
+                     Visualforce.remoting.buffer = false;
+
+                     Visualforce.remoting.Manager.invokeAction( 
+                         '{!$RemoteAction.Report_KeyRatioEmployees.runReport}', "{!usrId}", contactIds, startDateStr, endDateStr, totalWeeks,
+                         function(result, event) 
+                         {
+                         	console.log('Back from JS Remote call...');
+                             if (event.status) 
+                             {
+                             	if (result.haveData == true)
+                             	{
+                             		$('#messageText').html("");
+                             		$('#messagePanel').hide();
+                             		$('#reportDiv').show();
+                             		console.log('Callig redrawTable...');
+                                 	redrawTable( result );
+                                }
+                                else
+                                {
+                                	console.log('no Data...');
+                                	$('#workingDialog').dialog('close');
+                                	$('#messageText').html("The Results did not return any data.  Try changing your dates or selecting additional users and fields.");
+                                }
+                             } 
+                             else 
+                             {
+								console.log('Error in JS Remote Call - ' + event.message);
+								alert( event.message );
+                             }
+                         }
+                     );
+                 };
+                 
+                 // Used for selecting, updating, or creating a report
+                 var redrawTable = function(result) 
+                 {
+                 
+                 	var haveData = result.haveData;
+                 	
+                       // Destroy the DataTable and clear out the columns in case
+                       // we have a dataset with different columns
+                       
+                       $('#dialogText').html("building table...");
+                       
+                       reportTableDt.destroy();
+                       reportTable.empty();
+                       var i = 0;
+                       
+                       for (key in fldInfo)
+                       {
+                       		console.log('key = ' + key + ', i = ' + i);
+                       		tblCols[ key ] = i++;
+                       		//console.log('Adding ' + key + ' to tblCols[]');
+                       }      
+					
+					  
+					   // -----------------------------------------------------------------------------------------
+					   // AT THIS POINT, BUILD THE EXTRA FIELDS INTO THE RESULT OBJECT THAT THE DATATABLE
+					   // WILL USE... PULL IN THE PIECES FOR EACH OF THE INDIVIDUAL SUMMATION QUERIES.
+					   // -----------------------------------------------------------------------------------------
+					   
+					    console.log('prior to loop...');
+                        for( foo in result['empRec'])
+                        { 
+                        
+                            result['empRec'][foo].Grade__c 			   = result['grades'][foo];              
+                            result['empRec'][foo].Hours__c 			   = result['totalHrs'][foo];
+                            console.log('here...');
+                            result['empRec'][foo].JobsCompleted__c 	   = result['jobsCompleted'][foo];
+                            result['empRec'][foo].ThrilledPercent__c   = result['thrilledPercent'][foo];
+                            result['empRec'][foo].ThrilledRecCnt__c    = result['thrilledRecCount'][foo];
+                            result['empRec'][foo].RedoCnt__c  		   = result['jobsRedoCount'][foo];
+                            result['empRec'][foo].UnExcusedCount__c    = result['unExcusedCount'][foo];
+                            result['empRec'][foo].ExcusedCount__c      = result['ExcusedCount'][foo];
+                            result['empRec'][foo].NetPromoterScore__c  = result['netPromoterScore'][foo];
+                            result['empRec'][foo].distinctClientCnt__c = result['distinctClientCnt'][foo];
+                            result['empRec'][foo].attritionCnt__c      = result['attritionCnt'][foo];
+                            result['empRec'][foo].overDeltaHours__c    = result['durationHours'][foo];
+                            result['empRec'][foo].overDeltaPayroll__c  = result['durationWorkPayroll'][foo];
+                            
+                           
+                            //console.log('Over Delta calc for ' + foo + ' = ' + result['empRec'][foo].overDeltaHours__c + ', ' + result['empRec'][foo].overDeltaPayroll__c);
+                            var wHrs = result['empRec'][foo].overDeltaHours__c;
+                            var pHrs = result['empRec'][foo].overDeltaPayroll__c;
+                            
+                            var delta = 0.0;
+                            if ((wHrs != null) && (pHrs != null))
+                            {
+                            	delta = parseFloat((wHrs - pHrs)).toFixed(2);
+                            	console.log('Delta for ' + foo + ' = ' + delta + '('+wHrs+ ' - ' + pHrs + ') - ' + timeConvert(delta));
+                            	result['empRec'][foo].DeltaHours__c  = delta
+                            	
+                            } 
+                            
+                            var minHrsRqst = result['empRec'][foo].Minimum_Hours_Requested__c;
+                            var hrsRcvd = result['empRec'][foo].Hours__c;
+                            var hrsDelta = null;                
+                            if ((minHrsRqst != null) && (hrsRcvd != null))
+                            {
+                            	hrsDelta = (minHrsRqst - hrsRcvd);
+                            	//console.log('Hours Delta for ' + foo + ' = ' + hrsDelta);
+                            }
+                            
+                            result['empRec'][foo].deltaMinHrs__c = hrsDelta;
+                            
+                            // JOB COSTING VALUES...
+                            
+                            if (result['revenueCompleted'][foo] == null)
+                            {                  
+                            	result['empRec'][foo].revenueCompleted__c = 0.0;
+                            }
+                            else
+                            {
+                            	result['empRec'][foo].revenueCompleted__c = result['revenueCompleted'][foo];
+                            }
+                    
+                            if (result['revenueCanceled'][foo] == null)
+                            {                    
+                            	result['empRec'][foo].revenueCanceled__c = 0.0;
+                            }
+                            else
+                            {
+                            	result['empRec'][foo].revenueCanceled__c = result['revenueCanceled'][foo];
+                            } 
+                            
+                            // PAYROLL JOB-RELATED
+                            if (result['payrollJob'][foo] == null)
+                            {
+                            	result['empRec'][foo].payrollJob__c = 0.0;
+                            }
+                            else
+                            {
+								result['empRec'][foo].payrollJob__c =result['payrollJob'][foo];
+                            }
+                             
+                            // PAYROLL NON JOB VALUE 
+                            if (result['payrollNonJob'][foo] == null)
+                            {
+                            	result['empRec'][foo].payrollNonJob__c = 0.0;
+                            }
+                            else
+                            {
+								result['empRec'][foo].payrollNonJob__c =result['payrollNonJob'][foo];
+                            }    
+                            
+                            // CALCULATE ATTRITION                                                                 
+                            
+                            var empObj = result['empRec'][foo];
+                            
+                            var attritionVal = null;
+                            if (empObj.attritionCnt__c != null)
+                            {
+                            	var clientCnt = empObj.distinctClientCnt__c;
+                            	var attritionCnt = empObj.attritionCnt__c;
+                            	
+                            	
+                            	if (attritionCnt > 0)
+                            	{
+                            		attritionVal = parseFloat(((attritionCnt /clientCnt ) * 100.0)).toFixed(2);
+                            	}
+                            	//console.log('Calc Attrition value (' + attritionVal + ') - pro=' + foo + ', attcnt=' + attritionCnt + ', clcnt=' +  clientCnt);
+                            } 
+                            
+                            result['empRec'][foo].Attrition__c = attritionVal;                      
+                            
+                            // CALCULATE JOB COST   
+                            
+                            result['empRec'][foo].revenueJobTot__c = empObj.revenueCompleted__c + empObj.revenueCanceled__c;
+                            result['empRec'][foo].payrollTot__c = empObj.payrollJob__c + empObj.payrollNonJob__c;
+                            var jobCost;
+                            if (empObj.payrollTot__c > 0)
+                            {
+                            	jobCost = parseFloat(((empObj.payrollTot__c /empObj.revenueJobTot__c ) * 100.0)).toFixed(2);
+                            }
+                            else
+                            {
+                            	jobCost = null;
+                            }
+                            result['empRec'][foo].JobCosting__c = jobCost;
+                            
+                            //console.log('job Cost for ' + foo + ' = ' + jobCost);
+                        }	
+                        			   
+ 
+ 						globalEmpRec = result['empRec'];
+ 
+                       // rowData should already be an array of objects, each object representing a record,
+                       // with the key equating to the the api name field and the value will be the value
+                       // of that field for the record
+
+                       // columnData will also be an array of objects. This only contains the fields that
+                       // were referenced in our soql query. The key will represent the api name
+                       // of the field and the value will represent the field label for that api name.
+                       //convert arrray of object(apex map) to an array
+                       
+                       var report = $.map(result['empRec'], function(value, index) 
+                       {
+                           return [value];
+                       });
+					   
+                       var rowData = report;
+                       var dataCol = []; 
+
+                       // Extract the column information and set it to the specifications of the
+                       // DataTables columns option key used to setup the table
+                       
+						var ctype, cdef, cformat, cfieldInfo;
+                       
+                       for (var key in fldInfo) 
+                       {
+                       	   var isVisible = visibility [key];
+                       	   if ((isVisible == 'undefined') || (isVisible == null))
+                       	   {
+                       	   		isVisible = true;
+                       	   }
+                       	   
+                       	   if ((key == 'Id') || (key == 'AccountId'))
+                       	   {
+                       	   	   isVisible = false;
+                       	   }                       	   
+                       	   
+                       	   if ((key == 'Date_Of_Hire__c') || (key == 'Insurance_Expiration_Date__c'))
+                       	   {
+                       	   		dataCol.push(
+                       	   		{
+                       	   			"name"			 : key,
+                       	   			"data"			 : key,
+                       	   			"title"			 : fldInfo[key].name + ' (YY/MM/DD)',
+                       	   			"visible" 		 : isVisible,
+                       	   			"width"			 : '50',
+                       	   			"render"		 : function (data)
+                       	   			{
+                       	   				if (data == null) return "";
+                       	   				var date = new Date(data);
+                       	   				var month = "0" + (date.getMonth() + 1);
+                       	   				month = month.slice(-2, month.length);
+                       	   				
+                       	   				var day = "0" + date.getDate();
+                       	   				day = day.slice(-2, day.length);
+                       	   				return date.getFullYear() + "/" + month + "/" + day
+                       	   			},
+                       	   			
+				                	"defaultContent" : ""
+				                	
+				                	
+				                });                     	   
+                       	   }
+                       	   else if (key == 'Grade__c') 
+                       	   {	
+                       	   		dataCol.push(
+                       	   		{
+                       	   			"name"			 : 'Grade__c',
+                       	   			"data"			 : key,
+                       	   			"title"			 : '<a href="#" data-toggle="tooltip" title="This is an average score over all time, not over the specified start and end times."><i class="fa fa-question-circle"></i></a> ' + fldInfo[key].name,
+                       	   			"visible" 		 : isVisible,
+                       	   			"render"		 : function (data) 
+                       	   			{
+                       	   				//console.log('value by API: ', this.cell({ row:this.parentNode.rowIndex, column: this.cellIndex}).data());
+                       	   				if (data == null) return "";
+                       	   				return '<span class="MPUFld"><a href="#">' + data + '%</a></span>';
+                       	   			},
+                       	   			
+				                	"defaultContent" : ""	
+				                });                     	   
+                       	   }  
+
+                       	   else if (key == 'DeltaHours__c') 
+                       	   {	
+                       	   		console.log('Processing Attrition field...');
+                       	   		dataCol.push(
+                       	   		{
+                       	   			"name"			 : key,
+                       	   			"data"			 : key,
+                       	   			"title"			 : 'Delta Hrs',
+                       	   			"visible" 		 : isVisible,
+                       	   			"render"		 : function (data) 
+                       	   			{
+                       	   				if (data == null) return "";
+                       	   				return '<span class="DeltaHoursFld"><a href="#">' + data + '%</a></span>';
+                       	   			},
+                       	   			
+				                	"defaultContent" : ""	
+				                });                     	   
+                       	   }  
+                       	   
+                       	   else if (key == 'Attrition__c') 
+                       	   {	
+                       	   		console.log('Processing Attrition field...');
+                       	   		dataCol.push(
+                       	   		{
+                       	   			"name"			 : key,
+                       	   			"data"			 : key,
+                       	   			"title"			 : fldInfo[key].name,
+                       	   			"visible" 		 : isVisible,
+                       	   			"render"		 : function (data) 
+                       	   			{
+                       	   				if (data == null) return "";
+                       	   				return '<span class="AttritionFld"><a href="#">' + data + '%</a></span>';
+                       	   			},
+                       	   			
+				                	"defaultContent" : ""	
+				                });                     	   
+                       	   }                      	                       
+                       	   else if (key == 'JobCosting__c') 
+                       	   {	
+                       	   		dataCol.push(
+                       	   		{
+                       	   			"name"			 : key,
+                       	   			"data"			 : key,
+                       	   			"title"			 : fldInfo[key].name,
+                       	   			"visible" 		 : isVisible,
+                       	   			"render"		 : function (data) 
+                       	   			{
+                       	   				//console.log('value by API: ', this.cell({ row:this.parentNode.rowIndex, column: this.cellIndex}).data());
+                       	   				if (data == null) return "";
+                       	   				return '<span class="JobCostingFld"><a href="#">' + data + '%</a></span>';
+                       	   			},
+                       	   			
+				                	"defaultContent" : ""	
+				                });                     	   
+                       	   }                       	   
+                       	   else if (key == 'ThrilledPercent__c') 
+                       	   {	
+                       	   		dataCol.push(
+                       	   		{
+                       	   			"name"			 : key,
+                       	   			"data"			 : key,
+                       	   			"title"			 : '<a href="#" data-toggle="tooltip" title="This is a percentage over all time, not over the specified start and end times."><i class="fa fa-question-circle"></i></a> ' + fldInfo[key].name,
+                       	   			"visible" 		 : isVisible,
+                       	   			"render"		 : function (data) 
+                       	   			{
+                       	   				if (data == null) return "";
+                       	   				return '<span class="PercentThrilledFld"><a href="#">' + data + '%</a></span>';
+                       	   			},
+                       	   			
+				                	"defaultContent" : ""	
+				                });                     	   
+                       	   }  
+                       	   else if (key == 'deltaMinHrs__c') 
+                       	   {	
+                       	   		dataCol.push(
+                       	   		{
+                       	   			"name"			 : key,
+                       	   			"data"			 : key,
+                       	   			"title"			 : '<a href="#" data-toggle="tooltip" title="This is the difference from the average hours worked over the time period calculated to weeks, divided by the minimum hours requested per week ."><i class="fa fa-question-circle"></i></a> ' + fldInfo[key].name,
+                       	   			"visible" 		 : isVisible,
+                       	   			"render"		 : function (data) 
+                       	   			{
+                       	   				if (data == null) return "";
+                       	   				return '<span class="deltaMinHrsFld"><a href="#">' + data + '%</a></span>';
+                       	   			},
+                       	   			
+				                	"defaultContent" : ""	
+				                });                     	   
+                       	   }                          	                        	                    	   
+                       	   else if (key == 'Hours__c') 
+                       	   {	
+                       	   		dataCol.push(
+                       	   		{
+                       	   			"name"			 : key,
+                       	   			"data"			 : key,
+                       	   			"title"			 : '<a href="#" data-toggle="tooltip" title="Average Hours worked based on start and end dates and based on hire/termination dates."><i class="fa fa-question-circle"></i></a> ' + fldInfo[key].name,
+                       	   			"visible" 		 : isVisible, 
+                       	   			"render"		 : function (data) 
+                       	   			{
+                       	   				//console.log('value by API: ', this.cell({ row:this.parentNode.rowIndex, column: this.cellIndex}).data());
+                       	   				if (data == null) return "";
+                       	   				return '<span class="HoursWorkedFld"><a href="#">' + data + '</a></span>';
+                       	   			},                       	   			                     	   			
+				                	"defaultContent" : ""	
+				                });                     	   
+                       	   }
+                       	   else if ( (key == 'LastName') || (key == 'Name') )
+                       	   {	
+                       	   		dataCol.push(
+                       	   		{
+                       	   			"name"			 : key,
+                       	   			"data"			 : key,
+                       	   			"title"			 : fldInfo[key].name,
+                       	   			"visible" 		 : isVisible,
+                       	   			"render"		 : function (data)
+                       	   			{
+                       	   				//console.log('value by API: ', this.cell({ row:this.parentNode.rowIndex, column: this.cellIndex}).data());
+                       	   				if (data == null) return "";
+                       	   				return '<span class="LastNameFld"><a href="#">' + data + '</a></span>';
+                       	   			},
+                       	   			
+				                	"defaultContent" : ""	
+				                });                     	   
+                       	   } 
+                       	   else if (key == 'JobsCompleted__c' )
+                       	   {	
+                       	   		dataCol.push(
+                       	   		{
+                       	   			"name"			 : key,
+                       	   			"data"			 : key,
+                       	   			"title"			 : fldInfo[key].name,
+                       	   			"visible" 		 : isVisible,
+                       	   			"render"		 : function (data)
+                       	   			{
+                       	   				if (data == null) return "";
+                       	   				return '<span class="jobsCompletedFld"><a href="#">' + data + '</a></span>';
+                       	   			},
+                       	   			
+				                	"defaultContent" : ""	
+				                });                     	   
+                       	   }
+                       	   else if (key == 'UnExcusedCount__c' )
+                       	   {	
+                       	   		dataCol.push(
+                       	   		{
+                       	   			"name"			 : key,
+                       	   			"data"			 : key,
+                       	   			"title"			 : fldInfo[key].name,
+                       	   			"visible" 		 : isVisible,
+                       	   			"render"		 : function (data)
+                       	   			{
+                       	   				if (data == null) return "";
+                       	   				return '<span class="unexcusedFld"><a href="#">' + data + '</a></span>';
+                       	   			},
+                       	   			
+				                	"defaultContent" : ""	
+				                });                     	   
+                       	   } 
+                       	   
+                       	   else if (key == 'NetPromoterScore__c' )
+                       	   {	
+                       	   		dataCol.push(
+                       	   		{
+                       	   			"name"			 : key,
+                       	   			"data"			 : key,
+                       	   			"title"			 : fldInfo[key].name,
+                       	   			"visible" 		 : isVisible,
+                       	   			"render"		 : function (data)
+                       	   			{
+                       	   				if (data == null) return "";
+                       	   				return '<span class="netPromoterFld"><a href="#">' + data + '</a></span>';
+                       	   			},
+                       	   			
+				                	"defaultContent" : ""	
+				                });                     	   
+                       	   }                        	   
+                       	   
+                       	   else if (key == 'ExcusedCount__c' )
+                       	   {	
+                       	   		dataCol.push(
+                       	   		{
+                       	   			"name"			 : key,
+                       	   			"data"			 : key,
+                       	   			"title"			 : fldInfo[key].name,
+                       	   			"visible" 		 : isVisible,
+                       	   			"render"		 : function (data)
+                       	   			{
+                       	   				if (data == null) return "";
+                       	   				return '<span class="excusedFld"><a href="#">' + data + '</a></span>';
+                       	   			},
+                       	   			
+				                	"defaultContent" : ""	
+				                });                     	   
+                       	   }                         	                         	   
+                       	    
+                       	   else if (key == 'RedoCnt__c' )
+                       	   {	
+                       	   		dataCol.push(
+                       	   		{
+                       	   			"name"			 : key,
+                       	   			"data"			 : key,
+                       	   			"title"			 : fldInfo[key].name,
+                       	   			"visible" 		 : isVisible,
+                       	   			"render"		 : function (data)
+                       	   			{
+                       	   				if (data == null) return "";
+                       	   				return '<span class="JobsRecleanFld"><a href="#">' + data + '</a></span>';
+                       	   			},
+                       	   			
+				                	"defaultContent" : ""	
+				                });                     	   
+                       	   } 
+                     	   
+                       	    
+                       	   else if (key == 'AccountName__c')
+                       	   {	
+                       	   		dataCol.push(
+                       	   		{
+                       	   			"name"			 : key,
+                       	   			"data"			 : key,
+                       	   			"title"			 : 'Office',
+                       	   			"visible" 		 : isVisible,
+                       	   			"render"		 : function (data)
+                       	   			{
+                       	   				//console.log('value by API: ', this.cell({ row:this.parentNode.rowIndex, column: this.cellIndex}).data());
+                       	   				if (data == null) return "";
+                       	   				return '<span class="AccountNameFld"><a href="#">' + data + '</a></span>';
+                       	   			},
+                       	   			
+				                	"defaultContent" : ""	
+				                });                     	   
+                       	   }                        	                        	   
+                       	   else
+                       	   {                       	   
+	                           dataCol.push(
+	                           {
+	                               // Api field name
+	                               "name"   : key,
+	                               "data"	: key,   // FIELD LABEL
+	                               "title"	: fldInfo[key].name,
+	                               "visible": isVisible,
+
+	                               
+	                               // Set the defaultContent value for key cell values that do not exist
+	
+	                               // (i.e. if the column is null from the query then it will not be
+	                               // included in the object result from our RemoteAction apex call)
+	                               // Otherwise the following error will appear:
+	                               // DataTables warning: table id={id} - Requested unknown parameter
+	                               // '{parameter}' for row {row-index}, column{column-index}`
+	
+	                               // Please see the following link for more details:
+	                               // https://datatables.net/manual/tech-notes/4
+	                               "defaultContent": ""
+	                           });
+	                       		
+                       		}
+                       }
+                       
+						$.fn.dataTable.ext.search.push(
+						    function( settings, data, dataIndex ) 
+						    {
+						    	//console.log( 'In ext search... data = ' + data);
+						        var MPU_FilterActive = {!setupRec.filter_MPU__c};
+						        var mpuMin = 0;
+						        var mpuMax = 100;
+						        
+						        if (MPU_FilterActive == true)
+						        {
+						        	mpuMin = parseInt( $('#MPUMin').val(), 10 );
+						        	mpuMax = parseInt( $('#MPUMax').val(), 10 );
+						        }
+						        
+						        var Thrilled_FilterActive = {!setupRec.filter_Thrilled__c};
+						        var thrilledMin = 0;
+						        var thrilledMax = 100;
+
+						        if (Thrilled_FilterActive == true)
+						        {
+						        	thrilledMin = parseInt( $('#thrilledMin').val(), 10 );
+						        	thrilledMax = parseInt( $('#thrilledMax').val(), 10 );
+						        }
+						        
+						        var attrition_FilterActive = {!setupRec.filter_Attrition__c};
+						        var attritionMin = 0;
+						        var attritionMax = 100;
+						        
+						        if (attrition_FilterActive == true)
+						        {
+						        	attritionMin = parseInt( $('#attritionMin').val(), 10 );
+						        	attritionMax = parseInt( $('#attritionMax').val(), 10);
+						        }
+
+						        var netPromoter_FilterActive = {!setupRec.filter_Promoter__c};
+						        var netPromoterMin = 0;
+						        var netPromoterMax = 100;
+						        
+						        if (netPromoter_FilterActive == true)
+						        {
+						        	netPromoterMin = parseInt( $('#netPromoterMin').val(), 10 );
+						        	netPromoterMax = parseInt( $('#netPromoterMax').val(), 10 );
+						        }
+						        
+						        var jobCosting_FilterActive = {!setupRec.filter_Job_Costing__c};
+						        var jobCostingMin = 0;
+						        var jobCostingMax = 100;
+						        
+						        if (jobCosting_FilterActive == true)
+						        {
+						        	jobCostingMin = parseInt( $('#jobCostingMin').val(), 10 );
+						        	jobCostingMax = parseInt( $('#jobCostingMax').val(), 10 );
+						        }						        
+
+						        var MPUscore = parseFloat( data[tblCols['Grade__c']] ) || 0; // use data for the MPU column
+						        var thrilledVal = parseFloat( data[tblCols['ThrilledPercent__c']] ) || 0;
+						        var netPromoterVal = parseFloat( data[tblCols['NetPromoterScore__c']] ) || 0;
+						        var jobCostingVal = parseFloat( data[tblCols['JobCosting__c']]) || 0;
+						        
+						        //console.log('NetPromterVal = ' + netPromoterVal);
+						        if ( 
+						        		(   ( isNaN( mpuMin ) && isNaN( mpuMax ) ) ||
+						             		( isNaN( mpuMin ) && MPUscore <= mpuMax ) ||
+						             		( mpuMin <= MPUscore && isNaN( mpuMax ) ) ||
+						             		( mpuMin <= MPUscore && MPUscore <= mpuMax ) 
+						             	) &&
+						        		(   ( isNaN( thrilledMin ) && isNaN( thrilledMax ) ) ||
+						             		( isNaN( thrilledMin ) && thrilledVal <= thrilledMax ) ||
+						             		( thrilledMin <= thrilledVal && isNaN( thrilledMax ) ) ||
+						             		( thrilledMin <= thrilledVal && thrilledVal <= thrilledMax ) 
+						             	)&&
+						        		(   ( isNaN( netPromoterMin ) && isNaN( netPromoterMax ) ) ||
+						             		( isNaN( netPromoterMin ) && netPromoterVal <= netPromoterMax ) ||
+						             		( netPromoterMin <= netPromoterVal && isNaN( netPromoterMax ) ) ||
+						             		( netPromoterMin <= netPromoterVal && netPromoterVal <= netPromoterMax ) 
+						             	)&&
+						        		(   ( isNaN( jobCostingMin ) && isNaN( jobCostingMax ) ) ||
+						             		( isNaN( jobCostingMin ) && jobCostingVal <= jobCostingMax ) ||
+						             		( jobCostingMin <= jobCostingVal && isNaN( jobCostingMax ) ) ||
+						             		( jobCostingMin <= jobCostingVal && jobCostingVal <= jobCostingMax ) 
+						             	)						             						             	
+						            )
+						        {
+						            return true;
+						        }
+						        return false;
+						    }
+						);                       
+
+                       // Initialize the DataTable
+                       
+                        $('#dialogText').html("formatting table...");
+                        
+                       reportTableDt = reportTable.DataTable({
+                           columns:        dataCol,
+                           data:           rowData,
+                           processing:     true,
+                           scrolly:			400,
+                           deferRender:    true,
+                           lengthMenu: 		[ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]         
+                           
+                       }); 
+                                              			
+					   reportTableDt.on('page', function(){ $('[data-toggle="tooltip"]').tooltip(); });
+                       reportTableDt.on('click', 'tbody td .MPUFld', function()
+                       {
+                       		var dtptr = $(this).closest('td');
+                       		var empId = reportTableDt.cell(dtptr,tblCols['Id']).data();
+                       		var empName = reportTableDt.cell(dtptr,tblCols['Name']).data();
+                       		mpuDetails( empId, empName, reportTableDt.cell(dtptr).data());
+                       		
+                       } );
+
+                       reportTableDt.on('click', 'tbody td .DeltaHoursFld', function()
+                       {
+                       		var dtptr = $(this).closest('td');
+                       		var empId = reportTableDt.cell(dtptr,tblCols['Id']).data();
+                       		var empName = reportTableDt.cell(dtptr,tblCols['Name']).data();
+                       		deltaHoursDetails( empId, empName, reportTableDt.cell(dtptr).data());
+                       		
+                       } );  
+
+                       reportTableDt.on('click', 'tbody td .AttritionFld', function()
+                       {
+                       		var dtptr = $(this).closest('td');
+                       		var empId = reportTableDt.cell(dtptr,tblCols['Id']).data();
+                       		var empName = reportTableDt.cell(dtptr,tblCols['Name']).data();
+                       		AttritionDetails( empId, empName, reportTableDt.cell(dtptr).data());
+                       		
+                       } );  
+                                           
+                       reportTableDt.on('click', 'tbody td .PercentThrilledFld', function()
+                       {
+                       		var dtptr = $(this).closest('td');
+                       		var empId = reportTableDt.cell(dtptr,tblCols['Id']).data();
+                       		var empName = reportTableDt.cell(dtptr,tblCols['Name']).data();
+                       		percThrilledDetails( empId, empName, reportTableDt.cell(dtptr).data());
+                       		
+                       } );  
+                       
+                       reportTableDt.on('click', 'tbody td .deltaMinHrsFld', function()
+                       {
+                       		var dtptr = $(this).closest('td');
+                       		var empId = reportTableDt.cell(dtptr,tblCols['Id']).data();
+                       		var empName = reportTableDt.cell(dtptr,tblCols['Name']).data();
+                       		deltaMinHrsDetail( empId, empName, reportTableDt.cell(dtptr).data());
+                       		
+                       } );                         
+                       
+                       reportTableDt.on('click', 'tbody td .JobCostingFld', function()
+                       {
+                       		var dtptr = $(this).closest('td');
+                       		var empId = reportTableDt.cell(dtptr,tblCols['Id']).data();
+                       		var empName = reportTableDt.cell(dtptr,tblCols['Name']).data();
+                       		jobCostingDetails( empId, empName, reportTableDt.cell(dtptr).data());
+                       		
+                       } );                          
+                       
+                       
+                       reportTableDt.on('click', 'tbody td .JobsRecleanFld', function()
+                       {
+                       		var dtptr = $(this).closest('td');
+                       		var empId = reportTableDt.cell(dtptr,tblCols['Id']).data();
+                       		var empName = reportTableDt.cell(dtptr,tblCols['Name']).data();
+                       		jobsRecleanDetails( empId, empName, reportTableDt.cell(dtptr).data());
+                       		
+                       } );
+                       
+                       reportTableDt.on('click', 'tbody td .unexcusedFld', function()
+                       {
+                       		var dtptr = $(this).closest('td');
+                       		var empId = reportTableDt.cell(dtptr,tblCols['Id']).data();
+                       		var empName = reportTableDt.cell(dtptr,tblCols['Name']).data();
+                       		unExcusedDetails( empId, empName, reportTableDt.cell(dtptr).data());
+                       		
+                       } ); 
+                       
+                       reportTableDt.on('click', 'tbody td .netPromoterFld', function()
+                       {
+                       		var dtptr = $(this).closest('td');
+                       		var empId = reportTableDt.cell(dtptr,tblCols['Id']).data();
+                       		var empName = reportTableDt.cell(dtptr,tblCols['Name']).data();
+                       		netPromoterDetails( empId, empName, reportTableDt.cell(dtptr).data());
+                       		
+                       } );                          
+                       
+                       reportTableDt.on('click', 'tbody td .excusedFld', function()
+                       {
+                       		var dtptr = $(this).closest('td');
+                       		var empId = reportTableDt.cell(dtptr,tblCols['Id']).data();
+                       		var empName = reportTableDt.cell(dtptr,tblCols['Name']).data();
+                       		ExcusedDetails( empId, empName, reportTableDt.cell(dtptr).data());
+                       		
+                       } );                                                               
+                       
+                       reportTableDt.on('click', 'tbody td .jobsCompletedFld', function()
+                       {
+                       		var dtptr = $(this).closest('td');
+                       		var empId = reportTableDt.cell(dtptr,tblCols['Id']).data();
+                       		var empName = reportTableDt.cell(dtptr,tblCols['Name']).data();
+                       		jobsCompletedDetails( empId, empName, reportTableDt.cell(dtptr).data());
+                       		
+                       } ); 
+                                              
+                       reportTableDt.on('click', 'tbody td .HoursWorkedFld', function()
+                       {
+                       		var dtptr = $(this).closest('td');
+                       		var empId = reportTableDt.cell(dtptr,tblCols['Id']).data();
+                       		var empName = reportTableDt.cell(dtptr,tblCols['Name']).data();
+                       		hoursWorkedDetails( empId, empName, reportTableDt.cell(dtptr).data());
+                       		
+                       } );                       
+                       
+                       reportTableDt.on('click', 'tbody td .LastNameFld', function()
+                       {
+                       		var dtptr = $(this).closest('td');
+                       		var empId = reportTableDt.cell(dtptr, tblCols['Id']).data();
+                       		var empName = reportTableDt.cell(dtptr,tblCols['Name']).data();
+
+							var windowObjectReference;
+  							windowObjectReference = window.open("/" + empId, empName, "resizable,scrollbars,status");
+                       		
+                       } );    
+                       
+                       reportTableDt.on('click', 'tbody td .AccountNameFld', function()
+                       {
+                       		var dtptr = $(this).closest('td');
+                       		var AccntId = reportTableDt.cell(dtptr, tblCols['AccountId']).data();
+                       		var AccntName = reportTableDt.cell(dtptr,tblCols['AccountName__c']).data();
+
+							var windowObjectReference;
+  							windowObjectReference = window.open("/" + AccntId, AccntName, "resizable,scrollbars,status");
+                       		
+                       } ); 
+                                                                                       
+					  
+                      //console.log('INDEX = ' + reportTableDt.column('Grade__c:name').index());
+                       
+                       
+                       // Event listener to the range filtering inputs to redraw on input
+					    $('#MPUMin, #MPUMax, #thrilledMin, #thrilledMax, #netPromoterMin, #netPromoterMax, #jobCostingMin, #jobCostingMax').keyup( function() 
+					    {
+					        reportTableDt.draw();
+					    } );
+                       
+
+					    new $.fn.dataTable.Buttons( reportTableDt, {
+					        buttons: [
+					            'csv', 'excel', 'print'
+					        ],
+					        dom:
+					        {
+					        	button:
+					        	{
+					        		tag: 'button',
+					        		className: 'btn btn-xs btn-primary'
+					        	}
+					        }
+					        
+					    } );
+					    
+					    // AT THIS POINT, I WANT TO HAVE THE CSV, EXCEL AND PRINT BUTTONS TO BE IN THE MIDDLE OF THE PAGE BETWEEN
+					    // THE PAGE LENGTH AND SEARCH FILTER.  THE ONLY WAY I COULD FIGURE TO DO THIS WAS TO INJECT A NEW DIV AFTER
+					    // THE PAGE LENGTH SECTION, THEN TELL THE TABLE TO PUT THE BUTTON CONTAINER IN THAT NEW SECTION.  I USED A 
+					    // CUSTOM FLOAT_CENTER CSS TO FLOAT THE DIV IN THE CENTER.
+					    
+					    $("#report-table_length").after( "<div class=\"float_center\" id=\"btnSection\"></div>");		// ADD DIV SECTION AFTER PAGE LENGTH COMPONENT
+						reportTableDt.buttons(0,null).container().appendTo($("#btnSection"));		// ADD BUTTON CONTAINER TO NEWLY ADDED SECTION
+						$('[data-toggle="tooltip"]').tooltip(); 
+						
+						$('#workingDialog').dialog('close');
+                  };                 
+                 
+              }; // end JS Remote
+              
+              
+             var jsRemote = new JSRemote();
+	         $('#generate-report-btn').click(function()
+           	 {
+           	 	$('#messageText').html("Running...");
+           	 	$('#dialogText').html("Fetching data...");
+           	 	$('#workingDialog').dialog('open');
+            	jsRemote.runReport();
+            	
+           	 });
+           	 
+    });                     
+
+
+function checkConfiguration()
+{
+	var curUser = "{!usrId}";
+	
+	sforce.connection.sessionId = '{!$Api.Session_ID}';
+	var totHours= 0.0;
+	
+	var query = "SELECT Id FROM Key_Ratio_Emp_Setup__c WHERE User__c = '" + curUser + "'";
+ 	var qr = sforce.connection.query( query );
+ 	
+	if (qr.size == 0) 
+	{
+		$('#generate-report-btn').prop("disabled",true);
+		$('#messageText').html("Setting up configuration for first time user....");
+		
+        Visualforce.remoting.timeout = 120000; // Set timeout to max 120secs
+        Visualforce.remoting.buffer = false;
+
+        Visualforce.remoting.Manager.invokeAction( 
+            '{!$RemoteAction.Report_KeyRatioEmployees.configureUser}', curUser,
+            function(result, event) 
+            {
+                if (event.status) 
+                {
+                    $('#messageText').html("Default configuration completed....reloading page.");
+                    location.reload(true);
+                } 
+
+            }
+        );            
+ 			
+	}	
+	else
+	{
+		$('#generate-report-btn').prop("disabled",false);
+		$('#messageText').html("");
+        $('#messagePanel').hide();
+	}
+	
+	//String quere = 'SELECT columnInfo__c, filter_Attrition__c, filter_Job_Costing__c, filter_MPU__c, filter_Promoter__c, filter_Thrilled__c, fld_Attrition_Rate__c, fld_Auto_Ins_Exp__c, fld_Delta_From_Min_Hours__c, fld_Drivers_Lic_Exp__c, fld_First_Name__c, fld_Full_Name__c, fld_Hire_Date__c, fld_Job_Costing_Percentage__c, fld_Last_Name__c, fld_Min_Hrs_Requested__c, fld_MPU_Score_Avg__c, fld_Net_Promoter_Score__c, fld_Num_Excused_absences__c, fld_Num_Jobs_Completed__c, fld_Num_Recleans_Caused__c, fld_Num_Unexcused_Absenses__c, fld_Over_Under_Delta__c, fld_Percent_Thrilled__c, fld_Recruiting_Src__c, fld_Status__c, fld_Tot_Days_Emp_Grouping__c, fld_Tot_Days_Employed__c, fld_Total_Hrs_Rcvd__c, Id, User__c, val_Attrition_Rate_Max__c, val_Attrition_Rate_Min__c, val_From_Date__c, val_Hire_End__c, val_Hire_Start__c, val_Insurance_Expiration__c, val_Job_Costing_Max__c, val_Job_Costing_Min__c, val_License_Expiration__c, val_MPU_Score_Max__c, val_MPU_Score_Min__c, val_Net_Promoter_Max__c, val_Net_Promoter_Min__c, val_Selected_Pros__c, val_Status_Active__c, val_Status_Inactive__c, val_Thrilled_Max__c, val_Thrilled_Min__c, val_To_Date__c from Key_Ratio_Emp_Setup__c
+
+}
+
+
+function buildFieldList()
+{
+	visibility = JSON.parse('{!jsonVisiblity}');
+	fldInfo = {!fldJSON};
+	
+	$('#simpleDiv').empty();
+	var cnt = {!fieldCnt};
+	
+	console.log('Field Count - ' + cnt);
+	
+	var divData = [];
+	var hdnFields = [];
+	divData.push('<ul id="simpleList" class="list-group">'); 
+	var i = 0;
+    var hdnStr = '';
+    var hdnClass = '';
+    fldLst.length = 0;		// empty the array
+	for (key in fldInfo)
+	{
+		//console.log('Key - (' + key + ')');
+		var nm = fldInfo[key].name;
+		var vis = fldInfo[key].visible;
+		var isVisible = visibility[key];
+		if (isVisible == true)
+		{
+			//console.log('Visible')
+			hdnStr = '';
+			hdnClass = '';
+		}
+		else
+		{
+			//console.log('Not Visible');
+			hdnStr = '';
+			hdnClass= 'fldHidden';
+		}
+		divData.push('<li class="list-group-item ' + hdnClass + '"><span class="my-handle"><i class="fa fa-sort " aria-hidden="true"></i></span> ' + nm + hdnStr +'</li>');
+		
+		fldLst[nm] = key;
+	}
+							
+	divData.push('</ul>');
+	$('#simpleDiv').html(divData.join(''));
+	Sortable.create(simpleList, { handle: ".my-handle"});	
+		
+}
+
+
+function hoursWorkedDetails( empId, empName, curVal, HireDate, TermDate )
+{
+
+	$('#dtlMHeader').text('Details for Average Hours Worked Per Week (' + curVal + ') for ' + empName);
+	
+    var startDate = $('#startDateField').datepicker('getDate');
+    var startUTC = moment.utc(startDate).format("YYYY-MM-DD");
+    var startDisplay = moment.utc(startDate).format("MM/DD/YYYY");
+    var startCalc = moment.utc(startDate).format("MM/DD/YYYY");
+    
+    var endDate = $('#endDateField').datepicker('getDate');
+    var endUTC = moment.utc(endDate).format("YYYY-MM-DD");
+    var endDisplay = moment.utc(endDate).format("MM/DD/YYYY")
+    var endCalc = moment.utc(endDate).format("MM/DD/YYYY")
+    
+    //console.log('Start date UTC = ' + startUTC);
+    //console.log('startCalc = ' + startCalc);
+    	
+	sforce.connection.sessionId = '{!$Api.Session_ID}';
+	var totHours= 0.0;
+	
+	var query = "SELECT employee__c, sum(hours__c) totHours " + 
+ 		        "  FROM PayRoll__c " + 
+ 		        " WHERE employee__c = '" + empId + "'" + 
+ 		        "   AND (date_worked__c >= " + startUTC + ") " +
+ 		        "   AND (date_worked__c <= " + endUTC + " ) " +
+ 		        "GROUP BY employee__c";
+ 	var qr = sforce.connection.query( query );
+ 	
+	if (qr.size > 0)
+	{
+		var totRec = qr.getArray("records");
+		for(var i=0; i<totRec.length; i++)
+		{
+			totHours = parseFloat(totRec[i].totHours).toFixed(2);
+		}
+	}
+	//console.log('Total hours = ' + totHours);
+				        	
+    query = "SELECT employee__c, hours__c, Adjustment_Note__c, Adjustment_Reason__c,Client_Name__c, Date_Worked__c, Job__c, " +
+             "      Job__r.Name, Role__c, Job__r.Client_Account__c, employee__r.Date_Of_Hire__c, employee__r.Inactive_Effective_Date__c " + 
+ 		        "  FROM PayRoll__c " + 
+ 		        " WHERE employee__c = '" + empId + "'" + 
+ 		        "   AND hours__c > 0 " + 
+ 		        "   AND (date_worked__c >= " + startUTC + ") " +
+ 		        "   AND (date_worked__c <= " + endUTC + " ) "
+ 		        "ORDER BY date_worked__c desc";
+ 		        
+ 	//console.log('Hours Worked query = ' + query);
+	try
+	{            
+		qr = sforce.connection.query( query );
+		if (qr.size > 0)
+		{
+		    var sqlRec = qr.getArray("records");
+
+		    var hireDt = moment.utc(sqlRec[0].Employee__r.Date_Of_Hire__c).format("MM/DD/YYYY");  
+		    var termDt = moment.utc(sqlRec[0].Employee__r.Inactive_Effective_Date__c).format("MM/DD/YYYY"); 
+		    
+		    //console.log('HireDt = ' + hireDt + ', Start Date = ' + startCalc);
+		    //console.log('termDt = ' + termDt + ', End Date = ' + endCalc);
+		    
+		    var adjStart = false;
+		    var adjEnd = false;
+		    var adjWeeks = 0.0;								
+			if (hireDt != null)
+			{
+				var isAfter = moment(hireDt).isAfter(startCalc);
+				if (isAfter)											// IF EMP HIRE DATE IS AFTER REPORT START DATE
+				{
+					//console.log('Hire Date > start date');
+					//console.log('startUTC before = ' + startCalc);
+					startCalc = hireDt;	
+					//console.log('startUTC after = ' + startCalc);				// ADJUST START DATE FOR THIS CALCULATION
+				    adjStart = true;
+				}
+			}
+			
+			if (termDt != null)
+			{
+				//console.log('Checking if ' + termDt + ' < ' + endCalc);
+				 var isBefore = moment(termDt).isBefore(endCalc);
+				 
+				if (isBefore)													// IF EMP INACTIVE DATE IS PRIOR TO REPORT END DATE
+				{
+					//console.log('Term Date < end date')
+					endCalc = termDt;											// ADJUST END DATE FOR THIS CALCULATION
+					adjEnd = true;								
+				}
+			}
+			
+			if ((adjStart == true) || (adjEnd == true))
+			{
+			
+			    //console.log('calulating number of weeks between ' + startCalc + ' and ' + endCalc);
+			    				
+				adjWeeks = moment(endCalc).diff(moment(startCalc), 'weeks', true);
+				if (adjWeeks < 1.0)
+				{
+					adjWeeks = 1.0;
+				}
+			}
+			adjWeeks = parseFloat(adjWeeks).toFixed(2)
+		    //console.log('Adjusted weeks = ' + adjWeeks);
+		    
+			var dtlBody = $('#dtlMBody');
+			var dtls = [];
+			dtls.push('<div class="well"><div class="dtlWellHeader">Calculation Information:</div>');
+			if (adjWeeks > 0.0)
+			{
+				dtls.push('- The specified reporting period of ' + startDisplay + ' through ' + endDisplay + ' is ' + totalWeeks + ' weeks</br>');
+				
+				dtls.push('- Hire Date: ' + hireDt);
+				if (adjStart == true)
+				{
+					dtls.push(' (greater than start date)' );
+				}
+				dtls.push('</br>');
+				
+				if (adjEnd == true)
+				{
+					dtls.push('- Inactive Date: ' + termDt + ' (less than end date)</br>');
+				}
+				dtls.push('* Based on hire date and/or inactive date, the # weeks have been adjusted to ' + adjWeeks + ' weeks.</br>');
+				dtls.push('</br>- Total Hours worked for this period was ' + totHours + '.</br>');
+				dtls.push('- Calculation for Average hours of ' + curVal + ' = (' + totHours + '/' + adjWeeks + ')');
+			}
+			else
+			{
+				dtls.push('- The Period of ' + startDisplay + ' through ' + endDisplay + ' equates to ' + totalWeeks + ' weeks.</br>');
+				dtls.push('- Total Hours worked for this period was ' + totHours + '.</br>');
+				dtls.push('- Calculation for Average hours of ' + curVal + ' = (' + totHours + '/' + totalWeeks + ')');
+			}
+			
+			dtls.push('</div>');
+			dtls.push('<p class="dtlMBodyInfo">Average Hours Worked (per week) value of ' + curVal + ' is based on the following ' + qr.size + ' records:</p></br>');
+    		dtls.push('<div class="container-fluid"><table id="hoursWorkedTbl" class="display table table-striped table-bordered table-responsive table-condensed">');
+    		dtls.push('<thead class="dtlMBodyTblHeader"><tr><th>Date Worked</th><th>Hours</th><th>Role</th><th>Client Name</th><th>Reference</th></thead>');
+			
+			var dateWorked;
+			console.log(sqlRec);
+			for(var i=0; i<sqlRec.length; i++)
+			{
+				var clientName = $.trim(sqlRec[i].Client_Name__c) + '';
+				dateWorked = moment.utc(sqlRec[i].Date_Worked__c).format("MM/DD/YYYY");
+				dtls.push('<tr><td>' + dateWorked + '</td>');				
+				dtls.push('<td align="right">' + parseFloat(sqlRec[i].Hours__c).toFixed(2) + '</td>');
+				dtls.push('<td>' + sqlRec[i].Role__c + '</td>');
+				
+				if (clientName.length == 0)
+				{
+					dtls.push('<td>No Client</td>');
+					var adjNote = $.trim(sqlRec[i].Adjustment_Note__c) + '';
+					var adjReason = $.trim(sqlRec[i].Adjustment_Reason__c) + '';
+					
+					var adjustmentText = '';
+					if (adjReason.length > 0)
+					{
+						adjustmentText += adjReason + ' ';
+					}
+					
+					if (adjNote.length > 0)
+					{
+						adjustmentText += '(' + adjNote + ')';
+					}
+					
+					if (adjustmentText.length >0)
+					{
+						dtls.push('<td>No Job <a href="#" data-toggle="tooltip" title="' + adjustmentText + '"><i class="fa fa-question-circle"></i></a></td>');
+					}
+					else
+					{
+						dtls.push('<td>No Job</td>');
+					}
+					
+				}
+				else
+				{ 
+
+					dtls.push('<td><a href="' + '/'+ sqlRec[i].Job__r.Client_Account__c + '" target="_blank">' + clientName + '</a></td>');
+					var jobURL = '/' + $.trim(sqlRec[i].Job__c);
+					dtls.push('<td><a href="' + jobURL + '" target="_blank">' + $.trim(sqlRec[i].Job__r.Name) + '</a></td>');
+				}
+				dtls.push('</tr>');
+			}
+			dtls.push('</table></div>');
+			
+			dtlBody.html(dtls.join(''));
+			$('#hoursWorkedTbl').DataTable();														// INITIALIZE THE DATATABLE
+			
+		
+			$('#hoursWorkedTbl').on('draw.dt', function(){ $('[data-toggle="tooltip"]').tooltip(); });		// FN TO INITIALIZE ANY TOOLTIPS ON PAGE CHANGE
+			$('[data-toggle="tooltip"]').tooltip(); 														// INITIALIZE ANY TOOLTIPS ON FIRST PAGE
+			$('#detailsModal').modal("show");																// SHOW THE PAGE
+		}
+		
+	}
+	catch (error)
+	{
+		alert(error.faultstring);
+	}
+}
+
+
+function deltaMinHrsDetail( empId, empName, curVal, HireDate, TermDate )
+{
+
+	console.log('In deltaMinHrsDetail....');
+	
+	var empRec = globalEmpRec[empId];
+	
+	$('#dtlMHeader').text('Details for Delta From Minimum Hours Requested for ' + empName);
+	
+    var startDate = $('#startDateField').datepicker('getDate');
+    var startUTC = moment.utc(startDate).format("YYYY-MM-DD");
+    var startDisplay = moment.utc(startDate).format("MM/DD/YYYY");
+    var startCalc = moment.utc(startDate).format("MM/DD/YYYY");
+    
+    var endDate = $('#endDateField').datepicker('getDate');
+    var endUTC = moment.utc(endDate).format("YYYY-MM-DD");
+    var endDisplay = moment.utc(endDate).format("MM/DD/YYYY")
+    var endCalc = moment.utc(endDate).format("MM/DD/YYYY")
+    
+    //console.log('Start date UTC = ' + startUTC);
+    //console.log('startCalc = ' + startCalc);
+    	
+	sforce.connection.sessionId = '{!$Api.Session_ID}';
+	var totHours= 0.0;
+	
+	var query = "SELECT employee__c, sum(hours__c) totHours " + 
+ 		        "  FROM PayRoll__c " + 
+ 		        " WHERE employee__c = '" + empId + "'" + 
+ 		        "   AND (date_worked__c >= " + startUTC + ") " +
+ 		        "   AND (date_worked__c <= " + endUTC + " ) " +
+ 		        "GROUP BY employee__c";
+ 	var qr = sforce.connection.query( query );
+ 	
+	if (qr.size > 0)
+	{
+		var totRec = qr.getArray("records");
+		for(var i=0; i<totRec.length; i++)
+		{
+			totHours = parseFloat(totRec[i].totHours).toFixed(2);
+		}
+	}
+	//console.log('Total hours = ' + totHours);
+				        	
+    query = "SELECT employee__c, hours__c, Adjustment_Note__c, Adjustment_Reason__c,Client_Name__c, Date_Worked__c, Job__c, " +
+             "      Job__r.Name, Job__r.client_account__c, role__c, employee__r.Date_Of_Hire__c, employee__r.Inactive_Effective_Date__c " + 
+ 		        "  FROM PayRoll__c " + 
+ 		        " WHERE employee__c = '" + empId + "'" + 
+ 		        "   AND hours__c > 0 " + 
+ 		        "   AND (date_worked__c >= " + startUTC + ") " +
+ 		        "   AND (date_worked__c <= " + endUTC + " ) "
+ 		        "ORDER BY date_worked__c desc";
+ 		        
+ 	//console.log('Hours Worked query = ' + query);
+	try
+	{            
+		qr = sforce.connection.query( query );
+		if (qr.size > 0)
+		{
+		    var sqlRec = qr.getArray("records");
+
+		    var hireDt = moment.utc(sqlRec[0].Employee__r.Date_Of_Hire__c).format("MM/DD/YYYY");  
+		    var termDt = moment.utc(sqlRec[0].Employee__r.Inactive_Effective_Date__c).format("MM/DD/YYYY"); 
+		    
+		    //console.log('HireDt = ' + hireDt + ', Start Date = ' + startCalc);
+		    //console.log('termDt = ' + termDt + ', End Date = ' + endCalc);
+		    
+		    var adjStart = false;
+		    var adjEnd = false;
+		    var adjWeeks = 0.0;								
+			if (hireDt != null)
+			{
+				var isAfter = moment(hireDt).isAfter(startCalc);
+				if (isAfter)											// IF EMP HIRE DATE IS AFTER REPORT START DATE
+				{
+					//console.log('Hire Date > start date');
+					//console.log('startUTC before = ' + startCalc);
+					startCalc = hireDt;	
+					//console.log('startUTC after = ' + startCalc);				// ADJUST START DATE FOR THIS CALCULATION
+				    adjStart = true;
+				}
+			}
+			
+			if (termDt != null)
+			{
+				//console.log('Checking if ' + termDt + ' < ' + endCalc);
+				 var isBefore = moment(termDt).isBefore(endCalc);
+				 
+				if (isBefore)													// IF EMP INACTIVE DATE IS PRIOR TO REPORT END DATE
+				{
+					//console.log('Term Date < end date')
+					endCalc = termDt;											// ADJUST END DATE FOR THIS CALCULATION
+					adjEnd = true;								
+				}
+			}
+			
+			if ((adjStart == true) || (adjEnd == true))
+			{
+			
+			    //console.log('calulating number of weeks between ' + startCalc + ' and ' + endCalc);
+			    				
+				adjWeeks = moment(endCalc).diff(moment(startCalc), 'weeks', true);
+				if (adjWeeks < 1.0)
+				{
+					adjWeeks = 1.0;
+				}
+			}
+			adjWeeks = parseFloat(adjWeeks).toFixed(2)
+		    //console.log('Adjusted weeks = ' + adjWeeks);
+		    
+			var dtlBody = $('#dtlMBody');
+			var dtls = [];
+			dtls.push('<div class="well"><div class="dtlWellHeader">Calculation Information:</div>');
+			if (adjWeeks > 0.0)
+			{
+				dtls.push('- The specified reporting period of ' + startDisplay + ' through ' + endDisplay + ' is ' + totalWeeks + ' weeks</br>');
+				
+				dtls.push('- Hire Date: ' + hireDt);
+				if (adjStart == true)
+				{
+					dtls.push(' (greater than start date)' );
+				}
+				dtls.push('</br>');
+				
+				if (adjEnd == true)
+				{
+					dtls.push('- Inactive Date: ' + termDt + ' (less than end date)</br>');
+				}
+				dtls.push('* Based on hire date and/or inactive date, the # weeks have been adjusted to ' + adjWeeks + ' weeks.</br>');
+				dtls.push('</br>- Total Hours worked for this period was ' + totHours + '.</br>');
+				dtls.push('- Calculation for Average hours of ' + empRec.Hours__c + ' = (' + totHours + '/' + adjWeeks + ')</br>');
+			}
+			else
+			{
+				dtls.push('- The Period of ' + startDisplay + ' through ' + endDisplay + ' equates to ' + totalWeeks + ' weeks.</br>');
+				dtls.push('- Total Hours worked for this period was ' + totHours + '.</br>');
+				dtls.push('- Calculation for Average hours of ' + empRec.Hours__c + ' = (' + totHours + '/' + totalWeeks + ')</br>');
+			}
+			
+			dtls.push('* Delta from Minimum requested hours = ' + curVal + ' based on (' + empRec.Minimum_Hours_Requested__c + ' - ' + empRec.Hours__c + ')');
+			
+			dtls.push('</div>');
+			dtls.push('<p class="dtlMBodyInfo">Delta from Minimum hours value of ' + curVal + ' is based on the following ' + qr.size + ' records:</p></br>');
+    		dtls.push('<div class="container-fluid"><table id="hoursWorkedTbl" class="display table table-striped table-bordered table-responsive table-condensed">');
+    		dtls.push('<thead class="dtlMBodyTblHeader"><tr><th>Date Worked</th><th>Hours</th><th>Role</th><th>Client Name</th><th>Job #</th></thead>');
+			
+			var dateWorked;
+			console.log(sqlRec);
+			for(var i=0; i<sqlRec.length; i++)
+			{
+				var clientName = $.trim(sqlRec[i].Client_Name__c) + '';
+				dateWorked = moment.utc(sqlRec[i].Date_Worked__c).format("MM/DD/YYYY");
+				dtls.push('<tr><td>' + dateWorked + '</td>');
+				dtls.push('<td align="right">' + parseFloat(sqlRec[i].Hours__c).toFixed(2) + '</td>');
+				dtls.push('<td align="center">' + sqlRec[i].Role__c + '</td>');
+				
+				if (clientName.length == 0)
+				{
+					dtls.push('<td>No Client</td>');
+					var adjNote = $.trim(sqlRec[i].Adjustment_Note__c) + '';
+					
+					var adjReason = $.trim(sqlRec[i].Adjustment_Reason__c) + '';
+					var adjustmentText = '';
+					if (adjReason.length > 0)
+					{
+						adjustmentText += adjReason + ' ';
+					}
+					
+					if (adjNote.length > 0)
+					{
+						adjustmentText += '(' + adjNote + ')';
+					}
+					
+					if (adjustmentText.length >0)
+					{
+						dtls.push('<td>No Job <a href="#" data-toggle="tooltip" title="' + adjustmentText + '"><i class="fa fa-question-circle"></i></a></td>');
+					}
+					else
+					{
+						dtls.push('<td>No Job</td>');
+					}
+					
+				}
+				else
+				{ 
+					dtls.push('<td><a href="' + '/'+ sqlRec[i].Job__r.Client_Account__c + '" target="_blank">' + clientName + '</a></td>');
+					var jobURL = '/' + $.trim(sqlRec[i].Job__c);
+					dtls.push('<td><a href="' + jobURL + '" target="_blank">' + $.trim(sqlRec[i].Job__r.Name) + '</a></td>');
+				}
+				dtls.push('</tr>');
+			}
+			dtls.push('</table></div>');
+			
+			dtlBody.html(dtls.join(''));
+			$('#hoursWorkedTbl').DataTable();														// INITIALIZE THE DATATABLE
+			
+		
+			$('#hoursWorkedTbl').on('draw.dt', function(){ $('[data-toggle="tooltip"]').tooltip(); });		// FN TO INITIALIZE ANY TOOLTIPS ON PAGE CHANGE
+			$('[data-toggle="tooltip"]').tooltip(); 														// INITIALIZE ANY TOOLTIPS ON FIRST PAGE
+			$('#detailsModal').modal("show");																// SHOW THE PAGE
+		}
+		else
+		{
+		 	alert('No Hours Worked data to display');
+		}
+		
+	}
+	catch (error)
+	{
+		alert(error.faultstring);
+	}
+}
+
+
+function mpuDetails( empId, empName, curVal )
+{
+	//alert('val = ' + empId);
+	//$('#dtlMHeader').empty();
+	//$('#dtlMBody').empty();
+	$('#dtlMHeader').text('MPU Score Details for ' + empName);
+	
+	sforce.connection.sessionId = '{!$Api.Session_ID}';
+	var query = "SELECT Completed_Date__c, Enrolled_Date__c, Grade__c, Name " + 
+		        "  FROM LMS_Course__c " + 
+		        " WHERE status__c = 'Complete' AND contact__c = '" + empId + "'" + 
+		        " ORDER BY completed_Date__c desc"	 
+	try
+	{            
+		var qr = sforce.connection.query( query );
+		if (qr.size > 0)
+		{
+		    //console.log ('Inside if - qr.size = ' + qr.size);
+			var dtlBody = $('#dtlMBody');
+			var dtls = [];
+			dtls.push('<p class="dtlMBodyInfo">Average MPU score: ' + curVal + ' is based on the following ' + qr.size + ' records:</p></br>');
+    		dtls.push('<div class="container-fluid"><table class="table table-striped table-bordered table-responsive table-condensed">');
+    		dtls.push('<thead class="dtlMBodyTblHeader"><tr><th>Enrolled</th><th>Completed</th><th>Grade</th><th>Course Name</th></thead>');
+			//console.log(dtls);
+			var gradeRec = qr.getArray("records");
+			var compDate;
+			var enrollDate;
+			for(var i=0; i<gradeRec.length; i++)
+			{
+				enrollDate = moment.utc(gradeRec[i].Enrolled_Date__c).format("MM/DD/YYYY");
+				compDate = moment.utc(gradeRec[i].Completed_Date__c).format("MM/DD/YYYY hh:mm a");
+				//console.log('inside loop: ' + gradeRec[i].name);
+				dtls.push('<tr><td>' + enrollDate + '</td>');
+				dtls.push('<td>' + compDate + '</td>');
+				dtls.push('<td align="right">' + parseFloat(gradeRec[i].Grade__c).toFixed(2) + '</td>');
+				dtls.push('<td>' + $.trim(gradeRec[i].Name) + '</td>');
+				dtls.push('</tr>');
+			}
+			dtls.push('</table></div>');
+			dtlBody.html(dtls.join(''));
+			$('#detailsModal').modal("show");
+		}
+		else
+		{
+		 	alert('No Grade data to display');
+		}
+		
+	}
+	catch (error)
+	{
+		alert(error.faultstring);
+	}
+}
+
+
+function deltaHoursDetails( empId, empName, curVal )
+{
+    var startDate = $('#startDateField').datepicker('getDate');
+    var startUTC = moment.utc(startDate).format("YYYY-MM-DD"); 
+    var endDate = $('#endDateField').datepicker('getDate');
+    var endUTC = moment.utc(endDate).format("YYYY-MM-DD"); 
+	var empRec = globalEmpRec[empId];
+	
+	$('#dtlMHeader').text('Delta (Worked vs Payroll) Hours for ' + empName);
+			var dtlBody = $('#dtlMBody');
+			var dtls = [];
+			
+	dtls.push('<div class="well"><div class="dtlWellHeader">Calculation Information:</div>');
+	dtls.push('- Period used: ' + startUTC + ' to ' + endUTC + '<br/>');
+	dtls.push('- Total Hours Worked: ' + empRec.overDeltaHours__c + '<br/>');
+	dtls.push('- Total Payroll Hours: ' + empRec.overDeltaPayroll__c + '<br/>');
+	dtls.push('* OverDue hours = (Hours Worked - Payroll Hours) = (' + empRec.overDeltaHours__c + ') - (' + empRec.overDeltaPayroll__c + ') = ' + curVal + '<br/>');
+	dtls.push('</div>');		
+
+				
+	sforce.connection.sessionId = '{!$Api.Session_ID}';
+	
+	var payMap = new Array();
+	var query1 = "SELECT Id, Name, date_worked__c, employee__c, Job__c, hours__c, role__c " +
+				"  FROM payroll__c " +
+				" WHERE employee__c = '" + empId + "'" + 
+				"   AND (job__r.start_date__c >= " + startUTC + ") " +
+ 		        "   AND (job__r.end_date__c <= " + endUTC + " ) " +
+				"   AND job__r.status__c = 'Completed' " +
+				"   AND job__r.kind__c <> 'OTC Job'" +
+				"   AND Role__c NOT IN ('Travel', 'Dispatch')" +
+				"   AND job__r.recordtype.name = 'Instance' "
+		        " ORDER BY date_worked__c desc"	 	
+	var qr1 = sforce.connection.query( query1 );
+	if (qr1.size > 0)
+	{
+		var qryRec1 = qr1.getArray("records");
+		for(var i=0; i<qryRec1.length; i++)
+		{
+			var payObj={ 	  id : qryRec1[i].Id,
+						    name : qryRec1[i].Name,
+						   hours : qryRec1[i].Hours__c,
+			             	role : qryRec1[i].Role__c
+					   };
+			console.log('payObj.hours = ' + payObj.hours);
+		    payMap[qryRec1[i].Job__c] = payObj;
+		}
+	
+	} 
+		        
+	var query = "SELECT contact__c, job__r.kind__c, job__r.type__c, job__c, job__r.duration__c, " +
+	            "       job__r.client_account__c, job__r.client_account__r.name, job__r.name, job__r.start_date__c " +
+				"  FROM Job_Contact__c " +
+				" WHERE contact__c = '" + empId + "'" + 
+				"   AND (job__r.start_date__c >= " + startUTC + ") " +
+ 		        "   AND (job__r.end_date__c <= " + endUTC + " ) " +
+				"   AND job__r.status__c = 'Completed' " +
+				"   AND job__r.kind__c <> 'OTC Job' " +
+				"   AND job__r.Type__c <> 'Dispatch' " +
+				"   AND job__r.recordtype.name = 'Instance'" 
+	console.log('Qry = ' + query);
+	try
+	{            
+		var qr = sforce.connection.query( query );
+		if (qr.size > 0)
+		{
+		    //console.log ('Inside if - qr.size = ' + qr.size);
+
+			dtls.push('<p class="dtlMBodyInfo">Delta value ' + curVal + ' is based on the following ' + qr.size + ' records:</p></br>');
+    		dtls.push('<div class="container-fluid"><table id="deltaTbl" class="table table-striped table-bordered">');
+    		dtls.push('<thead class="dtlMBodyTblHeader"><tr><th>Date Worked</th><th>Client</th><th>Job</th><th>Payroll</th><th>Role</th><th>Kind</th><th>Work Hrs</th><th>Payroll Hrs</th><th>Job Delta</th></thead>');
+			var qryRec = qr.getArray("records");
+			for(var i=0; i<qryRec.length; i++)
+			{
+				var pHrs = 0.0;
+				var wHrs = 0.0;
+				var pRec = payMap[ qryRec[i].Job__c ];
+				
+				if (pRec != null)
+				{
+					pHrs = pRec.hours;
+					if (pHrs == null)
+					{
+						pHrs = 0.0;
+					}
+				}
+
+				var wHrs = qryRec[i].Job__r.Duration__c;
+				if (wHrs == null) wHrs = 0.0;
+				
+				var delta = ( wHrs - pHrs);
+				
+				deltaClass = '';
+				if (delta < 0)
+				{
+					deltaClass = 'deltaNeg';
+				}
+				else if (delta > 0)
+				{
+					deltaClass = 'deltaPlus';
+				}
+				
+				dtls.push('<tr><td>' + qryRec[i].Job__r.Start_Date__c + '</td>');
+				dtls.push('<td><a href="/' + $.trim(qryRec[i].Job__r.Client_Account__c) + '" target="_blank">' + $.trim(qryRec[i].Job__r.Client_Account__r.Name) + '</a></td>');
+				dtls.push('<td><a href="/' + $.trim(qryRec[i].Job__c) + '" target="_blank">' + $.trim(qryRec[i].Job__r.Name) + '</a></td>');
+				if (pRec != null)
+				{	
+					dtls.push('<td><a href="/' + $.trim(pRec.id) + '" target="_blank">' + $.trim(pRec.name) + '</a></td>');	
+					dtls.push('<td>' + pRec.role + '</td>');
+				}
+				else
+				{
+					dtls.push('<td>No Payroll</td>');
+					dtls.push('<td></td>');
+				}		
+				
+				dtls.push('<td>' + qryRec[i].Job__r.Kind__c + '</td>');
+				dtls.push('<td align="right">' + parseFloat(wHrs).toFixed(2) + '</td>');
+				dtls.push('<td align="right">' + parseFloat(pHrs).toFixed(2) + '</td>');
+				dtls.push('<td class="' + deltaClass + '" align="right">' + parseFloat(delta).toFixed(2) + '</td>');
+				dtls.push('</tr>');
+			}
+			console.log('outside loop...');
+			dtls.push('</table></div>');
+			dtlBody.html(dtls.join(''));
+
+			deltaDT = $('#deltaTbl').DataTable({
+					processing:     true,
+                   	scrolly:		300,
+                    lengthMenu: 	[ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]
+			});
+																																				// INITIALIZE THE DATATABLE
+			//$('#deltaTbl').on('draw.dt', function(){ $('[data-toggle="tooltip"]').tooltip(); });			// FN TO INITIALIZE ANY TOOLTIPS ON PAGE CHANGE
+			//$('[data-toggle="tooltip"]').tooltip(); 														// INITIALIZE ANY TOOLTIPS ON FIRST PAGE						
+			
+			$('#detailsModal').modal("show");
+		}
+		
+	}
+	catch (error)
+	{
+		alert(error.faultstring);
+	}
+}
+
+
+function percThrilledDetails( empId, empName, curVal )
+{
+
+	$('#dtlMHeader').text('Service Feedback Details for ' + empName);
+	
+	sforce.connection.sessionId = '{!$Api.Session_ID}';
+	var query = "SELECT service_feedback__r.thrilled__c, service_feedback__r.client_account__r.name, " +
+				"       service_feedback__r.job__r.name, service_feedback__r.date_of_service__c, service_feedback__r.office_Notes__c, " +
+				"       service_feedback__r.thrilled_bool__c, service_feedback__r.job__c, service_feedback__r.client_account__c " + 
+		        "  FROM Feedback_Contact__c " + 
+		        " WHERE contact__c = '" + empId + "'" + 
+		        " ORDER BY service_feedback__r.date_of_service__c"
+	console.log('Feedback Query: ' + query);
+	try
+	{            
+		var qr = sforce.connection.query( query );
+		if (qr.size > 0)
+		{
+			var qryRec = qr.getArray("records");
+			var yesCnt = 0;
+			for (var i=0; i<qryRec.length; i++)
+			{
+				if (qryRec[i].Service_Feedback__r.Thrilled_Bool__c == 'true')
+				{
+					yesCnt++;
+				}
+			}
+			
+			var noCnt = (qryRec.length - yesCnt);
+			var noPercent = parseFloat(((noCnt / qryRec.length) * 100)).toFixed(2);
+			
+			var dtlBody = $('#dtlMBody');  
+			var dtls = [];
+			dtls.push('<div class="well"><div class="dtlWellHeader">Calculation Information:</div>');
+			dtls.push('- There were a total of ' + qryRec.length + ' records.<br/>');
+			dtls.push('- ' + noCnt + ' were not thrilled - (' + noPercent + '%)<br/>');
+			dtls.push('- ' + yesCnt + ' were thrilled - (' + curVal + '%)');
+			dtls.push('</div>');
+			
+			dtls.push('<p class="dtlMBodyInfo">There are a total of ' + qr.size + ' Service Feedback records:</p></br>');
+    		dtls.push('<div class="container-fluid"><table id="feedBackTbl" class="display table table-striped table-bordered table-responsive table-condensed">');
+    		dtls.push('<thead class="dtlMBodyTblHeader"><tr><th>Service Date</th><th>Account</th><th>Thrilled?</th><th>Notes</th></thead>');
+
+			
+			
+			console.log(qryRec);
+			for(var i=0; i<qryRec.length; i++)
+			{
+				var officeNotes = qryRec[i].Service_Feedback__r.Office_Notes__c;
+				if (officeNotes == null)
+				{
+					officeNotes = ' ';
+				}
+				
+				var yesNo = qryRec[i].Service_Feedback__r.Thrilled_Bool__c;
+				if (yesNo == 'true')
+				{
+					yesNo = 'Yes';
+				}
+				else
+				{
+					yesNo = 'No';
+				}
+				dtls.push('<tr>');
+				dtls.push('<td>' + qryRec[i].Service_Feedback__r.Date_of_Service__c + '</td>');
+				dtls.push('<td>' + qryRec[i].Service_Feedback__r.Client_Account__r.Name + '</td>');
+				dtls.push('<td>' + yesNo + '</td>');
+				
+				dtls.push('<td>' + officeNotes + '</td>');
+				dtls.push('</tr>');
+			}
+			dtls.push('</table></div>');
+			dtlBody.html(dtls.join(''));
+			feedbackDT = $('#feedBackTbl').DataTable({
+					processing:     true,
+                   	scrolly:		300,
+                    lengthMenu: 	[ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]
+			});
+																																				// INITIALIZE THE DATATABLE
+			$('#feedBackTbl').on('draw.dt', function(){ $('[data-toggle="tooltip"]').tooltip(); });			// FN TO INITIALIZE ANY TOOLTIPS ON PAGE CHANGE
+			$('[data-toggle="tooltip"]').tooltip(); 														// INITIALIZE ANY TOOLTIPS ON FIRST PAGE			
+			$('#detailsModal').modal("show");
+		}	
+	}
+	catch (error)
+	{
+		alert(error.faultstring);
+	}
+}
+
+
+function jobsCompletedDetails( empId, empName, curVal )
+{
+console.log('in jobsCompletedDetails...');
+    var startDate = $('#startDateField').datepicker('getDate');
+    var startUTC = moment.utc(startDate).format("YYYY-MM-DD"); 
+    var endDate = $('#endDateField').datepicker('getDate');
+    var endUTC = moment.utc(endDate).format("YYYY-MM-DD"); 
+
+	console.log('Got dates...');
+	$('#dtlMHeader').text('Completed Jobs Details for ' + empName);
+	
+	sforce.connection.sessionId = '{!$Api.Session_ID}';
+	var query = "SELECT Is_Preferred_Pro__c, is_Restricted_Pro__c, Role__c, job__c, job__r.client_account__c, job__r.client_account__r.name, " + 
+	            "       job__r.hours_of_Work__c, job__r.start_date__c, job__r.name " + 
+	            "  FROM Job_Contact__c  " + 
+	            " WHERE contact__c = '" + empId + "' " + 
+	            "   AND job__r.status__c = 'Completed' " +
+	            "   AND (job__r.start_date__c >= " + startUTC + ") " +
+ 		        "   AND (job__r.end_date__c <= " + endUTC + " ) " +
+ 		        " ORDER BY Job__r.start_date__c desc "
+	console.log('completed Query: ' + query);
+	try
+	{            
+		var qr = sforce.connection.query( query );
+		if (qr.size > 0)
+		{
+			var qryRec = qr.getArray("records");
+			
+			var dtlBody = $('#dtlMBody');  
+			var dtls = [];
+			
+			dtls.push('<p class="dtlMBodyInfo">There are a total of ' + qr.size + ' completed jobs:</p></br>');
+    		dtls.push('<div class="container-fluid"><table id="jobsCompletedTbl" class="display table table-striped table-bordered table-responsive table-condensed">');
+    		dtls.push('<thead class="dtlMBodyTblHeader"><tr><th>Date</th><th>Account</th><th>Job</th><th>Preferred?</th><th>Role</th><th>Hours</th></thead>');
+	
+			console.log(qryRec);
+			for(var i=0; i<qryRec.length; i++)
+			{
+				dtls.push('<tr>');
+				dtls.push('<td>' + qryRec[i].Job__r.Start_Date__c + '</td>');
+				dtls.push('<td><a href="/' + $.trim(qryRec[i].Job__r.Client_Account__c) + '" target="_blank">' + $.trim(qryRec[i].Job__r.Client_Account__r.Name) + '</a></td>');
+				dtls.push('<td><a href="/' + $.trim(qryRec[i].Job__c) + '" target="_blank">' + $.trim(qryRec[i].Job__r.Name) + '</a></td>');
+				dtls.push('<td>' + qryRec[i].Is_Preferred_Pro__c + '</td>');
+				dtls.push('<td>' + qryRec[i].Role__c + '</td>');
+				dtls.push('<td>' + qryRec[i].Job__r.Hours_of_Work__c + '</td>');
+				dtls.push('</tr>');
+			}
+			dtls.push('</table></div>');
+			dtlBody.html(dtls.join(''));
+			jobsCompletedDt = $('#jobsCompletedTbl').DataTable({
+					processing:     true,
+                   	scrolly:		300,
+                    lengthMenu: 	[ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]
+			});
+																													// INITIALIZE THE DATATABLE
+			$('#jobsCompletedTbl').on('draw.dt', function(){ $('[data-toggle="tooltip"]').tooltip(); });			// FN TO INITIALIZE ANY TOOLTIPS ON PAGE CHANGE
+			$('[data-toggle="tooltip"]').tooltip(); 																// INITIALIZE ANY TOOLTIPS ON FIRST PAGE			
+			$('#detailsModal').modal("show");
+		}
+		else
+		{
+		 	alert('No Service Feedback data to display');
+		}
+		
+	}
+	catch (error)
+	{
+		alert(error.faultstring);
+	}
+}
+
+function AttritionDetails( empId, empName, curVal )
+{
+    var startDate = $('#startDateField').datepicker('getDate');
+    var startUTC = moment.utc(startDate).format("YYYY-MM-DD"); 
+    var endDate = $('#endDateField').datepicker('getDate');
+    var endUTC = moment.utc(endDate).format("YYYY-MM-DD"); 
+
+	var empRec = globalEmpRec[empId];
+	
+	console.log('Got dates...');
+	$('#dtlMHeader').text('Attrition Details for ' + empName + ' - Attrition Score = ' + curVal + '%');
+
+	var dtlBody = $('#dtlMBody');  
+	var dtls = [];
+	dtls.push('<div class="well">');
+	dtls.push('<div class="dtlWellHeader">Calculation Information:</div>');
+	dtls.push('- Period used: ' + startUTC + ' to ' + endUTC + '<br/>');
+	dtls.push('- # Total jobs completed for period: ' + empRec.JobsCompleted__c + '<br/>');
+	dtls.push('- # Distinct Accounts Serviced: ' + empRec.distinctClientCnt__c + '<br/>');
+	dtls.push('- # Distinct Attrition Indicators: ' + empRec.attritionCnt__c + '<br/>');
+	dtls.push('* Attrition = ((' + empRec.attritionCnt__c + '/' + empRec.distinctClientCnt__c + ') * 100) = ' + curVal+ '%<br/>');		
+	dtls.push('</div>');	
+		
+	
+	sforce.connection.sessionId = '{!$Api.Session_ID}';
+	var query = "SELECT job__r.client_account__c, Role__c, job__c, job__r.client_account__r.Name, job__r.name, job__r.status__c, job__r.start_date__c, job__r.AttritionEmpNames__c " +
+		 		"  FROM job_Contact__c " +
+		 		" WHERE contact__c = '" + empId + "' " +
+		 		"   AND Job__r.status__c = 'Completed' " +
+		 		"   AND (job__r.start_date__c >= " + startUTC + ") " +
+ 		        "   AND (job__r.end_date__c <= " + endUTC + " ) " +
+		 		"   AND job__r.attritionEmpIDs__c LIKE '%" + empId + "%'";
+	
+	console.log('completed Query: ' + query);
+	try
+	{            
+		var qr = sforce.connection.query( query );
+		if (qr.size > 0)
+		{
+			var qryRec = qr.getArray("records");
+			
+    		dtls.push('<div class="container-fluid"><table id="attritionTbl" class="display table table-striped table-bordered table-responsive table-condensed">');
+    		dtls.push('<thead class="dtlMBodyTblHeader"><tr><th>Date</th><th>Account</th><th>Job</th><th>Role</th><th>Attrition Names</th></thead>');
+	
+			console.log(qryRec);
+			for(var i=0; i<qryRec.length; i++)
+			{
+				dtls.push('<tr>');
+				dtls.push('<td>' + qryRec[i].Job__r.Start_Date__c + '</td>');
+				dtls.push('<td><a href="/' + $.trim(qryRec[i].Job__r.Client_Account__c) + '" target="_blank">' + $.trim(qryRec[i].Job__r.Client_Account__r.Name) + '</a></td>');
+				dtls.push('<td><a href="/' + $.trim(qryRec[i].Job__c) + '" target="_blank">' + $.trim(qryRec[i].Job__r.Name) + '</a></td>');
+				dtls.push('<td>' + qryRec[i].Role__c + '</td>');
+				dtls.push('<td>' + qryRec[i].Job__r.AttritionEmpNames__c + '</td>');
+				dtls.push('</tr>');
+			}
+			dtls.push('</table></div>');
+			dtlBody.html(dtls.join(''));
+			jobsCompletedDt = $('#attritionTbl').DataTable({
+					processing:     true,
+                   	scrolly:		300,
+                    lengthMenu: 	[ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]
+			});
+																													// INITIALIZE THE DATATABLE
+			$('#attritionTbl').on('draw.dt', function(){ $('[data-toggle="tooltip"]').tooltip(); });				// FN TO INITIALIZE ANY TOOLTIPS ON PAGE CHANGE
+			$('[data-toggle="tooltip"]').tooltip(); 																// INITIALIZE ANY TOOLTIPS ON FIRST PAGE			
+			$('#detailsModal').modal("show");
+		}
+		
+	}
+	catch (error)
+	{
+		alert(error.faultstring);
+	}
+}
+
+
+function jobsRecleanDetails( empId, empName, curVal )
+{
+console.log('in jobsRecleanDetails...');
+
+    var startDate = $('#startDateField').datepicker('getDate');
+    var startUTC = moment.utc(startDate).format("YYYY-MM-DD"); 
+    var endDate = $('#endDateField').datepicker('getDate');
+    var endUTC = moment.utc(endDate).format("YYYY-MM-DD"); 
+	var totJobsCompleted = 0.0;
+	var totRecleansCaused = 0.0;
+	var totPercent = 0.0;
+	var curJobsCompleted = 0.0;
+	var curRecleansCaused = curVal;
+	var curPercent = 0.0;
+
+	$('#dtlMHeader').text('Re-Clean Jobs for ' + empName);
+	
+	sforce.connection.sessionId = '{!$Api.Session_ID}';
+	
+	// FIRST GET TOTAL JOBS COMPLETED...
+	var query1 = "SELECT contact__c, count(id) cnt  FROM job_contact__c where Contact__c = '" + empId + "' and job__r.status__c = 'Completed' Group by contact__c";
+	
+	console.log('Query 1: ' + query1);
+	var qr1 = sforce.connection.query( query1 );
+	if (qr1.size > 0)
+	{
+		var qr1Rec = qr1.getArray("records");
+		totJobsCompleted = qr1Rec[0].cnt;
+	}
+	
+	// GET JOBS COMPLETED BASED ON REPORTING TIME FRAME
+	var query2 = "SELECT contact__c, count(id) cnt  " +
+	      	     "  FROM job_contact__c " + 
+	      	     " WHERE Contact__c = '" + empId + "' " +
+	      	     "   AND job__r.status__c = 'Completed' " +
+	             "   AND (job__r.start_date__c >= " + startUTC + ") " +
+ 		         "   AND (job__r.end_date__c <= " + endUTC + ") " +
+	             " GROUP BY contact__c "
+	
+	console.log('Query 2: ' + query2);
+	var qr2 = sforce.connection.query( query2 );
+	if (qr2.size > 0)
+	{
+		var qr2Rec = qr2.getArray("records");
+		curJobsCompleted = qr2Rec[0].cnt;
+	}	
+	
+	// GET # RECLEANS OVERALL FOR THIS PRO
+	var query3 = "SELECT count(id) cnt " +
+			     "  FROM job_contact__c " +
+			     " WHERE Contact__c = '" + empId + "' " +
+			     "   AND job__c IN (Select job_redo__c from Job__c where is_redo__c = true )"
+	console.log('Query 3: ' + query3);
+	var qr3 = sforce.connection.query( query3 );
+	if (qr3.size > 0)
+	{
+		var qr3Rec = qr3.getArray("records");
+		totRecleansCaused = qr3Rec[0].cnt;
+	}	
+	
+	totPercent = parseFloat((totRecleansCaused / totJobsCompleted)*100).toFixed(2);
+	curPercent = parseFloat((curVal / curJobsCompleted)*100).toFixed(2);
+	
+	
+	// NOW QUERY THE JOBS THAT CAUSED THE RECLEAN BASED ON THE REPORT START AND END DATES...
+	
+	var query4 = "SELECT job__c, job__r.start_date__c, job__r.Duration__c, Role__c, job__r.end_date__c, job__r.name, job__r.client_account__r.name " +
+			     "  FROM job_contact__c " +
+			     " WHERE Contact__c = '" + empId + "' " + 
+			     "   AND job__c IN (SELECT job_redo__c " +
+			     "                    FROM Job__c WHERE is_redo__c = true " +
+	             "                     AND (start_date__c >= " + startUTC + ") " +
+ 		         "                     AND (end_date__c <= " + endUTC + ")) "
+                     
+	console.log('Query 4: ' + query4);
+	try
+	{            
+		var qr4 = sforce.connection.query( query4 );
+		if (qr4.size > 0)
+		{
+			var qryRec = qr4.getArray("records");
+			var dtlBody = $('#dtlMBody');  
+			var dtls = [];  
+			dtls.push('<div class="well"><div class="dtlWellHeader">Overall:</div>');
+			dtls.push('- # Completed Jobs: ' + totJobsCompleted + '<br/>');
+			dtls.push('- # Recleans Caused: ' + totRecleansCaused + ' - (' + totPercent + '%)<br/><br/>');
+			dtls.push('<div class="dtlWellHeader">Period ' + startUTC + ' to ' + endUTC + ':</div>');
+			dtls.push('- # Completed Jobs: ' + curJobsCompleted + '<br/>');
+			dtls.push('- # Recleans Caused: ' + curRecleansCaused + ' - (' + curPercent + '%)<br/><br/>');			
+			dtls.push('</div>');
+			dtls.push('<p class="dtlMBodyInfo">For the reporting period, there were ' + qr4.size + ' jobs that caused a reclean:</p></br>');
+    		dtls.push('<div class="container-fluid"><table id="jobsReCleanTbl" class="display table table-striped table-bordered table-responsive table-condensed">');
+    		dtls.push('<thead class="dtlMBodyTblHeader"><th>Date</th><th>Account</th><th>Job</th><th>Duration</th><th>Role</th></thead>');
+	
+			console.log(qryRec);
+			for(var i=0; i<qryRec.length; i++)
+			{
+				dtls.push('<tr>');
+				dtls.push('<td>' + qryRec[i].Job__r.Start_Date__c + '</td>');
+				dtls.push('<td><a href="/' + $.trim(qryRec[i].Job__r.Client_Account__c) + '" target="_blank">' + $.trim(qryRec[i].Job__r.Client_Account__r.Name) + '</a></td>');
+				dtls.push('<td><a href="/' + $.trim(qryRec[i].Job__c) + '" target="_blank">' + $.trim(qryRec[i].Job__r.Name) + '</a></td>');
+				dtls.push('<td>' + qryRec[i].Job__r.Duration__c + '</td>');
+				dtls.push('<td>' + qryRec[i].Role__c + '</td>');
+				dtls.push('</tr>');
+			}
+			dtls.push('</table></div>');
+			dtlBody.html(dtls.join(''));
+			$('#jobsReCleanTbl').DataTable({
+					processing:     true,
+                   	scrolly:		300,
+                    lengthMenu: 	[ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]
+			});
+																													// INITIALIZE THE DATATABLE
+			$('#jobsReCleanTbl').on('draw.dt', function(){ $('[data-toggle="tooltip"]').tooltip(); });			// FN TO INITIALIZE ANY TOOLTIPS ON PAGE CHANGE
+			$('[data-toggle="tooltip"]').tooltip(); 																// INITIALIZE ANY TOOLTIPS ON FIRST PAGE			
+			$('#detailsModal').modal("show");
+		}
+		else
+		{
+		 	alert('No Reclean Job data to display');
+		}
+		
+	}
+	catch (error)
+	{
+		alert(error.faultstring);
+	}
+}
+ 
+ 
+ 
+
+function unExcusedDetails( empId, empName, curVal )
+{
+    var startDate = $('#startDateField').datepicker('getDate');
+    var startUTC = moment.utc(startDate).format("YYYY-MM-DD"); 
+    var endDate = $('#endDateField').datepicker('getDate');
+    var endUTC = moment.utc(endDate).format("YYYY-MM-DD"); 
+
+	$('#dtlMHeader').text('unexcused Absences for ' + empName);
+	
+	sforce.connection.sessionId = '{!$Api.Session_ID}';
+	
+	var query = "SELECT Comments__c, Day_Of_Week__c, Day_of_Week_Name__c, Day_Of_Week_Value__c, Name, Recurrence_By__c, Recurrence_Frequency__c, " +
+	            "       Recurrence_Interval__c, Recurrence_Of__c, Shift__c, Start_Date__c, Start_Time__c, End_Date__c, End_Time__c, " +
+	            "       Related_Note__c, Related_Note__r.Client_Account__c, Related_Note__r.Client_Account__r.Name, " + 
+	            "       Related_Note__r.Job__c, Related_Note__r.Job__r.Name " +
+	            "  FROM Employee_Availability__c " + 
+	            " WHERE contact__c = '" + empId + "' " +
+	            "   AND (Type__c = 'Unexcused Absence') " +
+	            "   AND (start_date__c >= " + startUTC + ") " +
+ 		        "   AND (end_date__c <= " + endUTC + ") " +
+ 		        " ORDER BY start_Date__c desc "	            
+	            
+	console.log('unexcused Query: ' + query);
+	try
+	{            
+		var qr = sforce.connection.query( query );
+		if (qr.size > 0)
+		{
+			var qryRec = qr.getArray("records");
+			
+			var dtlBody = $('#dtlMBody');  
+			var dtls = [];
+			
+			dtls.push('<p class="dtlMBodyInfo">There are a total of ' + qr.size + ' unexcused absences:</p></br>');
+    		dtls.push('<div class="container-fluid"><table id="unexcusedTbl" class="display table table-striped table-bordered table-responsive table-condensed">');
+    		dtls.push('<thead class="dtlMBodyTblHeader"><th>Start Date</th><th>End Date</th><th>Comment</th><th>Account</th><th>Job</th></thead>');
+	
+			console.log(qryRec);
+			for(var i=0; i<qryRec.length; i++)
+			{
+				dtls.push('<tr>');
+				dtls.push('<td>' + qryRec[i].Start_Date__c + '</td>');
+				dtls.push('<td>' + qryRec[i].End_Date__c + '</td>');
+				cmnt = $.trim(qryRec[i].Comments__c);					
+				if (cmnt != null)
+				{
+					dtls.push('<td>' + cmnt + '</td>');
+				}
+				else
+				{
+					dtls.push('<td> </td>');
+				}				
+				
+				var noteId = qryRec[i].Related_Note__c;
+				
+				if ( noteId != null)
+				{
+				    var subquery = "SELECT Id, Comments__c, Job__c, Job__r.Name, Client_Account__c, Client_Account__r.Name From Note__c WHERE Id = '" + noteId + "'";
+				    sforce.connection.sessionId = '{!$Api.Session_ID}';
+				    var qr2 = sforce.connection.query( subquery );
+
+				    if (qr2.size > 0)
+				    {
+						var notesRec = qr2.getArray("records");										
+						var accntId = notesRec[0].Client_Account__c;
+						if ( accntId != null)
+						{
+							dtls.push('<td><a href="/' + accntId + '" target="_blank">' + $.trim(notesRec[0].Client_Account__r.Name) + '</a></td>');
+						}
+						else
+						{
+							dtls.push('<td></td>');
+						}					
+						
+						var jobId = notesRec[0].Job__c;
+
+						if (jobId != null)
+						{
+							dtls.push('<td><a href="/' + jobId + '" target="_blank">' + notesRec[0].Job__r.Name + '</a></td>');
+						}
+						else
+						{
+							dtls.push('<td></td>');
+						}
+					}
+					else
+					{
+						dtls.push('<td></td>');
+						dtls.push('<td></td>');
+					}															
+				}
+				else
+				{
+					dtls.push('<td></td>');
+					dtls.push('<td></td>');
+				}
+	
+				dtls.push('</tr>');
+			}
+			
+			dtls.push('</table></div>')
+
+			dtlBody.html(dtls.join(''));
+			$('#unexcusedTbl').DataTable({
+					processing:     true,
+                   	scrolly:		300,
+                    lengthMenu: 	[ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]
+			});
+																									// INITIALIZE THE DATATABLE
+			$('#unexcusedTbl').on('draw.dt', function(){ $('[data-toggle="tooltip"]').tooltip(); });			// FN TO INITIALIZE ANY TOOLTIPS ON PAGE CHANGE
+			$('[data-toggle="tooltip"]').tooltip(); 																// INITIALIZE ANY TOOLTIPS ON FIRST PAGE			
+			$('#detailsModal').modal("show");
+		}
+		else
+		{
+		 	alert('No Reclean Job data to display');
+		}
+		
+	}
+	catch (error)
+	{
+		alert(error.faultstring);
+	}
+
+}
+
+
+function ExcusedDetails( empId, empName, curVal )
+{
+    var startDate = $('#startDateField').datepicker('getDate');
+    var startUTC = moment.utc(startDate).format("YYYY-MM-DD"); 
+    var endDate = $('#endDateField').datepicker('getDate');
+    var endUTC = moment.utc(endDate).format("YYYY-MM-DD"); 
+
+	$('#dtlMHeader').text('Excused Absences for ' + empName);
+	
+	sforce.connection.sessionId = '{!$Api.Session_ID}';
+	
+	var query = "SELECT Comments__c, Type__c, Day_Of_Week__c, Day_of_Week_Name__c, Day_Of_Week_Value__c, Name, Recurrence_By__c, Recurrence_Frequency__c, " +
+	            "       Recurrence_Interval__c, Recurrence_Of__c, Shift__c, Start_Date__c, Start_Time__c, End_Date__c, End_Time__c " +
+	            "  FROM Employee_Availability__c " + 
+	            " WHERE contact__c = '" + empId + "' " +
+	            "   AND (Type__c != 'Unexcused Absence') " +
+	            "   AND (start_date__c >= " + startUTC + ") " +
+ 		        "   AND (end_date__c <= " + endUTC + ") " +
+ 		        " ORDER BY start_Date__c desc "	            
+	            
+	console.log('Excused Query: ' + query);
+	try
+	{            
+		var qr = sforce.connection.query( query );
+		if (qr.size > 0)
+		{
+			var qryRec = qr.getArray("records");
+			
+			var dtlBody = $('#dtlMBody');  
+			var dtls = [];
+			
+			dtls.push('<p class="dtlMBodyInfo">There are a total of ' + qr.size + ' excused absences:</p></br>');
+    		dtls.push('<div class="container-fluid"><table id="excusedTbl" class="display table table-striped table-bordered table-responsive table-condensed">');
+    		dtls.push('<thead class="dtlMBodyTblHeader"><th>Start Date</th><th>End Date</th><th>Type</th><th>Comment</th><th>Account</th><th>Job</th></thead>');
+	
+			console.log(qryRec);
+			for(var i=0; i<qryRec.length; i++)
+			{
+				dtls.push('<tr>');
+				dtls.push('<td>' + qryRec[i].Start_Date__c + '</td>');
+				dtls.push('<td>' + qryRec[i].End_Date__c + '</td>');
+				dtls.push('<td>' + qryRec[i].Type__c + '</td>');
+				cmnt = $.trim(qryRec[i].Comments__c);					
+				if (cmnt != null)
+				{
+					dtls.push('<td>' + cmnt + '</td>');
+				}
+				else
+				{
+					dtls.push('<td> </td>');
+				}				
+				
+				var noteId = qryRec[i].Related_Note__c;
+				
+				if ( noteId != null)
+				{
+				    var subquery = "SELECT Id, Comments__c, Job__c, Job__r.Name, Client_Account__c, Client_Account__r.Name From Note__c WHERE Id = '" + noteId + "'";
+				    sforce.connection.sessionId = '{!$Api.Session_ID}';
+				    var qr2 = sforce.connection.query( subquery );
+
+				    if (qr2.size > 0)
+				    {
+						var notesRec = qr2.getArray("records");										
+						var accntId = notesRec[0].Client_Account__c;
+						if ( accntId != null)
+						{
+							dtls.push('<td><a href="/' + accntId + '" target="_blank">' + $.trim(notesRec[0].Client_Account__r.Name) + '</a></td>');
+						}
+						else
+						{
+							dtls.push('<td></td>');
+						}					
+						
+						var jobId = notesRec[0].Job__c;
+
+						if (jobId != null)
+						{
+							dtls.push('<td><a href="/' + jobId + '" target="_blank">' + notesRec[0].Job__r.Name + '</a></td>');
+						}
+						else
+						{
+							dtls.push('<td></td>');
+						}
+					}
+					else
+					{
+						dtls.push('<td></td>');
+						dtls.push('<td></td>');
+					}															
+				}
+				else
+				{
+					dtls.push('<td></td>');
+					dtls.push('<td></td>');
+				}
+	
+				dtls.push('</tr>');
+			}
+			
+			dtls.push('</table></div>')
+
+			dtlBody.html(dtls.join(''));
+			$('#excusedTbl').DataTable({
+					processing:     true,
+                   	scrolly:		300,
+                    lengthMenu: 	[ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]
+			});
+																									// INITIALIZE THE DATATABLE
+			$('#excusedTbl').on('draw.dt', function(){ $('[data-toggle="tooltip"]').tooltip(); });			// FN TO INITIALIZE ANY TOOLTIPS ON PAGE CHANGE
+			$('[data-toggle="tooltip"]').tooltip(); 																// INITIALIZE ANY TOOLTIPS ON FIRST PAGE			
+			$('#detailsModal').modal("show");
+		}
+		else
+		{
+		 	alert('No Reclean Job data to display');
+		}
+		
+	}
+	catch (error)
+	{
+		alert(error.faultstring);
+	}
+
+}
+
+function netPromoterDetails( empId, empName, curVal )
+{
+	console.log('in netPromoterDetails...');
+    var startDate = $('#startDateField').datepicker('getDate');
+    var startUTC = moment.utc(startDate).format("YYYY-MM-DD"); 
+    var endDate = $('#endDateField').datepicker('getDate');
+    var endUTC = moment.utc(endDate).format("YYYY-MM-DD"); 
+
+	$('#dtlMHeader').text('Details associated with NET Promoter score (' + curVal + ') for ' + empName);
+	
+	var dtlBody = $('#dtlMBody');  
+	var dtls = [];  
+
+	sforce.connection.sessionId = '{!$Api.Session_ID}';
+	
+	var query1 = "SELECT Contact__c, count(id) totCnt, sum(service_Feedback__r.isPromoter__c) promoterCnt, " + 
+	             "       sum(service_Feedback__r.isPassive__c) passiveCnt, sum(service_Feedback__r.isRetractor__c) detractorCnt " +
+			     "  FROM Feedback_Contact__c " + 
+				 " WHERE contact__c = '" + empId + "' " + 
+				 "   AND (service_Feedback__r.job__r.start_date__c >= " + startUTC + ") " + 
+				 "   AND (service_feedback__r.job__r.End_Date__c <= " + endUTC + " ) " +
+				 "   AND service_Feedback__r.How_Likely_To_Recommend_Numeric__c <> null " +
+				 " GROUP BY Contact__c"
+	try
+	{            
+		var qr1 = sforce.connection.query( query1 );
+		if (qr1.size > 0)
+		{
+			var qryRec1 = qr1.getArray("records");
+			
+			var tot = qryRec1[0].totCnt;
+			var promoters = qryRec1[0].promoterCnt;
+			var passives = qryRec1[0].passiveCnt;
+			var detractors = qryRec1[0].detractorCnt;
+			
+			var promPerc = parseFloat((promoters/tot)*100).toFixed(0);
+			var passPerc = parseFloat((passives/tot)*100).toFixed(0);
+			var retrPerc = parseFloat((detractors/tot)*100).toFixed(0);
+			
+			dtls.push('<div class="well">');
+			dtls.push('<div class="dtlWellHeader">For the Period ' + startUTC + ' to ' + endUTC + ':</div>');
+			dtls.push('- # Total Jobs: ' + tot + '<br/>');
+			dtls.push('- # Promoters : ' + promoters + ' - (' + promPerc + ')<br/>');	
+			dtls.push('- # Passives  : ' + passives + ' - (' + passPerc + ')<br/>');
+			dtls.push('- # Detractors: ' + detractors + ' - (' + retrPerc + ')<br/>');
+			dtls.push('* Net Promoter Score (#Promoters - #detractors) = ' + curVal);		
+			dtls.push('</div>');				
+		}
+	}  
+	catch (error)
+	{
+		alert(error.faultstring);
+	}
+	
+	
+	var query2 = "SELECT  contact__c, service_Feedback__r.Net_Promoter_Category__c, service_Feedback__r.job__r.name, " +
+	       		 "		  service_Feedback__r.job__c, service_Feedback__r.client_account__c, service_Feedback__r.job__r.start_date__c, " + 
+	       		 "		  service_Feedback__r.job__r.end_date__c, Service_Feedback__r.Job__r.Client_Account__r.Name, Service_Feedback__r.Job__r.Client_Account__c " +
+				 "  FROM Feedback_Contact__c " +
+				 " WHERE contact__c = '" + empId + "' " + 
+			     "   AND (service_Feedback__r.job__r.status__c = 'Completed') " +
+				 "   AND (service_Feedback__r.job__r.start_date__c >= " + startUTC + ") " +
+				 "   AND (service_feedback__r.job__r.End_Date__c <= " + endUTC + " ) " +
+				 "   AND service_Feedback__r.How_Likely_To_Recommend_Numeric__c <> null "
+	
+	console.log('Net Promoter Query: ' + query2);
+	try
+	{            
+		var qr2 = sforce.connection.query( query2 );
+		if (qr2.size > 0)
+		{
+			var qryRec = qr2.getArray("records");
+			
+			dtls.push('<p class="dtlMBodyInfo">There are a total of ' + qr2.size + ' jobs:</p></br>');
+    		dtls.push('<div class="container-fluid"><table id="netPromoterTbl" class="display table table-striped table-bordered table-responsive table-condensed">');
+    		dtls.push('<thead class="dtlMBodyTblHeader"><tr><th>Date</th><th>Account</th><th>Job</th><th>Category</th></thead>');
+	
+			console.log(qryRec);
+			for(var i=0; i<qryRec.length; i++)
+			{
+				dtls.push('<tr>');
+				dtls.push('<td>' + qryRec[i].Service_Feedback__r.Job__r.Start_Date__c + '</td>');
+				dtls.push('<td><a href="/' + $.trim(qryRec[i].Service_Feedback__r.Job__r.Client_Account__c) + '" target="_blank">' + $.trim(qryRec[i].Service_Feedback__r.Job__r.Client_Account__r.Name) + '</a></td>');
+				dtls.push('<td><a href="/' + $.trim(qryRec[i].Service_Feedback__r.Job__c) + '" target="_blank">' + $.trim(qryRec[i].Service_Feedback__r.Job__r.Name) + '</a></td>');
+				dtls.push('<td>' + qryRec[i].Service_Feedback__r.Net_Promoter_Category__c + '</td>');
+				dtls.push('</tr>');
+			}
+			dtls.push('</table></div>');
+			dtlBody.html(dtls.join(''));
+			jobsCompletedDt = $('#netPromoterTbl').DataTable({
+					processing:     true,
+                   	scrolly:		300,
+                    lengthMenu: 	[ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]
+			});
+																													// INITIALIZE THE DATATABLE
+			$('#netPromoterTbl').on('draw.dt', function(){ $('[data-toggle="tooltip"]').tooltip(); });				// FN TO INITIALIZE ANY TOOLTIPS ON PAGE CHANGE
+			$('[data-toggle="tooltip"]').tooltip(); 																// INITIALIZE ANY TOOLTIPS ON FIRST PAGE			
+			$('#detailsModal').modal("show");
+		}
+		else
+		{
+		 	alert('No Net Promter score data to display');
+		}
+		
+	}
+	catch (error)
+	{
+		alert(error.faultstring);
+	}
+}
+
+function jobCostingDetails( empId, empName, curVal )
+{
+    var startDate = $('#startDateField').datepicker('getDate');
+    var startUTC = moment.utc(startDate).format("YYYY-MM-DD"); 
+    var endDate = $('#endDateField').datepicker('getDate');
+    var endUTC = moment.utc(endDate).format("YYYY-MM-DD"); 
+
+	var empRec = globalEmpRec[empId];
+	
+	
+
+	$('#dtlMHeader').text('Job Costing (' + empRec.JobCosting__c + '%) for ' + empName);
+	
+	sforce.connection.sessionId = '{!$Api.Session_ID}';
+	
+	var query = "SELECT job__r.status__c, job__r.Amount_Total__c, job__r.Charges_Subtotal__c, job__r.Canceled_Amount_Total__c, " +
+				"       job__r.start_Date__c, job__r.end_Date__c, job__c, job__r.Name, job__r.client_account__c, job__r.client_Account__r.name  " +
+				"  FROM Job_Contact__c " +
+ 		        " WHERE contact__c = '" + empId + "' " +
+ 		        "   AND (job__r.start_date__c >= " + startUTC + ") " +
+ 		        "   AND (job__r.end_date__c <= " + endUTC + ") " +
+ 		        "   AND ((job__r.status__c = 'Completed') OR (job__r.status__c = 'Canceled') OR (job__r.status__c = 'Canceled with Fees'))"
+ 		            	            
+	console.log('Job Costing - Job Revenue Query: ' + query);
+	try
+	{            
+		var qr = sforce.connection.query( query );
+		if (qr.size > 0)
+		{
+			var qryRec = qr.getArray("records");
+			
+			var dtlBody = $('#dtlMBody');  
+			var dtls = [];
+			dtls.push('<div class="well"><div class="dtlWellHeader">Total Job Revenue: $' + empRec.revenueJobTot__c + '</div>');
+			dtls.push('- Completed Revenue: $' + empRec.revenueCompleted__c + '<br/>');
+			dtls.push('- Canceled Revenue: $' + empRec.revenueCanceled__c + '<br/><br/>');
+			dtls.push('<div class="dtlWellHeader">Total Payroll:  $' + empRec.payrollTot__c + '</div>');
+			dtls.push('- Job Payroll: $' + empRec.payrollJob__c + '<br/>');
+			dtls.push('- Non Job Payroll: $' + empRec.payrollNonJob__c + '<br/><br/>');			
+			dtls.push('</div>');
+				
+			dtls.push('<div id="tabs">');
+  			dtls.push('<ul>');
+    		dtls.push('<li><a href="#tabs-1">Job Revenue Details</a></li>');
+    		dtls.push('<li><a href="#tabs-2">Payroll Details</a></li>');
+  			dtls.push('</ul>');
+		  	dtls.push('<div id="tabs-1">');
+				dtls.push('<p class="dtlMBodyInfo">There are a total of ' + qr.size + ' Completed/Canceled jobs:</p></br>');
+	    		dtls.push('<div class="container-fluid"><table id="jobCostJobTbl" class="display table table-striped table-bordered table-responsive table-condensed">');
+	    		dtls.push('<thead class="dtlMBodyTblHeader"><th>Job</th><th>Start Date</th><th>Status</th><th>Amount</th><th>Account</th></thead>');
+		
+				console.log(qryRec);
+				for(var i=0; i<qryRec.length; i++)
+				{
+					dtls.push('<tr>');
+					if (qryRec[i].Job__c != null)
+					{
+						dtls.push('<td><a href="/' + qryRec[i].Job__c + '" target="_blank">' + qryRec[i].Job__r.Name + '</a></td>');
+					}
+					else
+					{
+						dtls.push('<td></td>');
+					}				
+					dtls.push('<td>' + qryRec[i].Job__r.Start_Date__c + '</td>');
+					dtls.push('<td>' + qryRec[i].Job__r.Status__c + '</td>');
+					if (qryRec[i].status__c = 'Completed')
+					{
+						dtls.push('<td>' + qryRec[i].Job__r.Charges_Subtotal__c + '</td>');
+					}
+					else
+					{
+						dtls.push('<td>' + qryRec[i].Job__r.Canceled_Amount_Total__c + '</td>');
+					}
+					
+					if (qryRec[i].Job__r.Client_Account__c != null)
+					{
+						dtls.push('<td><a href="/' + qryRec[i].Job__r.Client_Account__c + '" target="_blank">' + qryRec[i].Job__r.Client_Account__r.Name + '</a></td>');
+					}
+					else
+					{
+						dtls.push('<td></td>');
+					}
+	
+					dtls.push('</tr>');
+				}
+		
+				dtls.push('</table></div>')
+	
+		    dtls.push('</div>');
+		  	dtls.push('<div id="tabs-2">');
+
+			sforce.connection.sessionId = '{!$Api.Session_ID}';
+			var query2 = "SELECT id, client_Name__c, employee__r.name, job__r.start_date__c, job__r.end_date__c, job__r.status__c, Adjustment__c, " +
+						 "       Adjustment_Note__c, Adjustment_Reason__c, Amount__c, Date_Worked__c, Employee__c, Hours_and_Rate__c, Job__c, " +
+						 "       Rate__c, Role__c, Total_Adjustment__c, Total_Amount__c, job__r.client_account__c, job__r.Name " +
+						 "  FROM Payroll__c  " + 
+						 " WHERE employee__c = '" + empId + "' " + 
+						 "   AND Job__c != null " +
+						 "   AND (Date_Worked__c >= " + startUTC + ") " + 
+						 "   AND (Date_Worked__c <= " + endUTC + ") "
+		 		            	            
+			console.log('Job Costing - Job Revenue Query2: ' + query2);
+			try
+			{            
+				var qr2 = sforce.connection.query( query2 );
+				if (qr2.size > 0)
+				{
+					var qryRec2 = qr2.getArray("records");
+					
+					dtls.push('<p class="dtlMBodyInfo">There are a total of ' + qr2.size + ' PayRoll records:</p></br>');
+		    		dtls.push('<div class="container-fluid"><table id="jobCostPayrollTbl" class="display table table-striped table-bordered table-responsive table-condensed">');
+		    		dtls.push('<thead class="dtlMBodyTblHeader"><th>Job</th><th>Date Worked</th><th>Client Name</th><th>Status</th><th>Role</th><th>Rate & Hours</th><th>Amount</th></thead>');
+			
+					for(var i=0; i<qryRec2.length; i++)
+					{
+						dtls.push('<tr>');
+						if (qryRec2[i].Job__c != null)
+						{
+							dtls.push('<td><a href="/' + qryRec2[i].Job__c + '" target="_blank">' + qryRec2[i].Job__r.Name + '</a></td>');
+						}
+						else
+						{
+							dtls.push('<td></td>');
+						}				
+						dtls.push('<td>' + qryRec2[i].Job__r.Start_Date__c + '</td>');
+						
+						if (qryRec2[i].Job__r.Client_Account__c != null)
+						{
+							dtls.push('<td><a href="/' + qryRec2[i].Job__r.Client_Account__c + '" target="_blank">' + qryRec2[i].Client_Name__c + '</a></td>');
+						}
+						else
+						{
+							dtls.push('<td></td>');
+						}
+						dtls.push('<td>' + qryRec2[i].Job__r.Status__c + '</td>');
+						dtls.push('<td>' + qryRec2[i].Role__c + '</td>');
+						dtls.push('<td>' + qryRec2[i].Hours_and_Rate__c + '</td>');
+						dtls.push('<td>' + qryRec2[i].Amount__c + '</td>');
+						dtls.push('</tr>');
+					}
+			
+					dtls.push('</table></div>')
+		  			dtls.push('</div></div>');
+				}
+			}
+			catch (error)
+			{
+				alert(error.faultstring);
+			}
+			
+			dtls.push('</div>');						
+			dtlBody.html(dtls.join(''));
+			$('#jobCostJobTbl').DataTable({
+					processing:     true,
+                   	scrolly:		300,
+                    lengthMenu: 	[ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]
+			});
+			
+			$('#jobCostPayrollTbl').DataTable({
+					processing:     true,
+                   	scrolly:		300,
+                    lengthMenu: 	[ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ]
+			});			
+																									// INITIALIZE THE DATATABLE
+			//$('#excusedTbl').on('draw.dt', function(){ $('[data-toggle="tooltip"]').tooltip(); });			// FN TO INITIALIZE ANY TOOLTIPS ON PAGE CHANGE
+			//$('[data-toggle="tooltip"]').tooltip(); 																// INITIALIZE ANY TOOLTIPS ON FIRST PAGE			
+			$( "#tabs" ).tabs();
+			$('#detailsModal').modal("show");
+		}
+		else
+		{
+		 	alert('No Job data to display');
+		}
+		
+	}
+	catch (error)
+	{
+		alert(error.faultstring);
+	}
+
+}
+
+
+function applydxFilters()
+{
+	saveFilterSettings();
+}
+ 
+function inactiveChanged()
+{
+    if($('.inactiveEmps').is(":checked"))   
+        $(".emp_Inactive").show();
+    else
+        $(".emp_Inactive").hide();
+} 
+ 
+function applyFieldOrder()
+{
+	var x = 0;
+	var curUser = "{!usrId}";
+	
+	//for (key in fldLst)
+	//{
+	//	console.log('key = ' + key + ', value = ' + fldLst[key]);
+	//}
+	
+	var sortStr = '{';
+	$( "#simpleList li" ).each(
+		function( index ) 
+		{
+		    var nm = $( this ).text().trim();
+	  		var apiNm = fldLst[nm].trim();
+	  		if (x > 0)
+	  		{
+	  			sortStr += ',';
+	  		}
+	  		var isVisible = visibility [apiNm];
+	  		console.log( index + ": " + nm + ', api Name:' + apiNm + ', visibility:' + isVisible);
+	  		if (typeof isVisible == 'undefined')
+	  		{
+	  			isVisible = false;
+	  		}
+	  		sortStr += '"' + apiNm + '":{"name":"' + nm + '","key":"' + index + '","visible":"' + isVisible + '","sOrder":"' + index + '"}';
+	  		x++;
+		});
+		
+		sortStr += '}';
+		
+		fldInfo = sortStr;
+		
+		//console.log('Final sortStr = ' + sortStr);
+		
+		// INVOKE ACTION FUNCTION....
+		
+
+		
+		// WRITE THE NEW SORTED LIST BACK TO THE CONFIGURATION RECORD
+		
+        Visualforce.remoting.timeout = 120000; // Set timeout to max 120secs
+        Visualforce.remoting.buffer = false;
+
+        Visualforce.remoting.Manager.invokeAction( 
+            '{!$RemoteAction.Report_KeyRatioEmployees.saveSortOrder}', curUser, sortStr,
+            function(result, event) 
+            {
+                if (event.status) 
+                {
+                    //console.log('Return result from call to saveSortOrder = ' + result);
+                    updateFields();
+                } 
+                else 
+                {
+					console.log('in Else');
+                }
+            }
+        );  
+}	  
+</script>     
+    
+</head>
+<body>
+<!-- <apex:pageMessage severity="warning" strength="3" title="ATTENTION: The Key Ratios Report is currently undergoing maintenance." summary="Please do not use this report until further notice; Once the report is determined to be working and accurate, this notice will be removed." /> -->
+
+<div class="bswrapper">
+    <apex:form id="rptForm" styleClass="form-inline">
+    
+	<apex:actionStatus id="Loading">
+		    <apex:facet name="start">
+		    <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.25; z-index: 1000; background-color: black;">
+		        &nbsp;
+		    </div>
+		    <div style="position: fixed; left: 0; top: 0; bottom: 0; right: 0; z-index: 1001; margin: 15% 50%">
+		        <div style="display: inline-block; padding: 2px; background-color: #fff; width: 125px;">
+		            <img src="/img/loading.gif" style="float: left; margin: 8px;" />
+		            <span style="display: inline-block; padding: 10px 0px;">Loading Report...</span>
+		        </div>
+		    </div>
+		    </apex:facet>
+		</apex:actionStatus>    
+    
+    <apex:pageMessages id="errs"></apex:pageMessages>
+		<!-- SETUP MODAL WINDOWS -->
+		<div id="rptSetup" class="modal fade">
+		
+		  <div class="modal-dialog modal-xl"> 
+		
+		    <!-- Modal content-->
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		        <h4 class="modal-title">Report Configuration</h4>
+		      </div>
+		      <div class="modal-body" >
+					<div class="container-fluid">
+						<div class="row">
+							<ul class="nav nav-pills nav-stacked col-md-2">
+							  <li style="padding:0px; margin-left:0px;" class="active"><a href="#tab_a" data-toggle="pill">Employees and Filters</a></li>
+							  <li><a href="#tab_b" data-toggle="pill">Field Selection</a></li>
+							  <li><a href="#tab_c" data-toggle="pill">Field Order</a></li>
+							</ul>
+							<div class="tab-content col-md-10" style="overflow:auto;">
+							        <div class="tab-pane active" id="tab_a">
+						                    <div class="panel panel-default panelNoBorder panelShade" style="overflow:auto;">
+						                    	<div class="container-fluid" >
+							                    	<div class="row">
+							                    	    
+							                    		<div class="sectionHeading">Select the Employees and Filters:</div>
+							                    		<div class="col-lg-6">
+							                    		 
+								                    		<div class="panel panel-primary">
+									                    		<apex:outputPanel id="empPanel1"> 
+										                    		<div class="controls">
+										                    			&nbsp;<apex:inputCheckbox styleClass="inactiveEmps" value="{!showInactiveEmps}" onchange="inactiveChanged()" />&nbsp;Show Inactive Employees
+										                    		
+																		  <div class="controls" style="float:right">
+																		    <button class="btn btn-primary btn-xs open-button" type="button">
+																		      Open all
+																		    </button>
+																		    <button class="btn btn-primary btn-xs close-button" type="button">
+																		      Close all
+																		    </button>
+																		  </div>
+																	</div>									                    		
+																	<div class="collapse-group" style="overflow:scroll;height:600px;width:99%;padding:5px;">
+																	
+																		<apex:repeat value="{!officeLst}" var="officeKey"> 
+																			  <div class="panel panel-default">
+																				    <div class="panel-heading" role="tab" id="headingOne">
+																				      	<h4 class="panel-title">
+																				        	<a role="button" data-toggle="collapse" href="#collapse{!officeKey.officeId}" aria-expanded="true" aria-controls="collapseOne" class="trigger collapsed">
+																				          	&nbsp;{!officeKey.officeNm}
+																				        	</a>
+																				      	</h4>
+																				    </div>
+																				    <div id="collapse{!officeKey.officeId}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+																				      <div class="panel-body">														      						
+																      						<div class="col-sm-6">
+																			      				SET:&nbsp;
+																			      				<apex:commandLink value="All" onclick="setAllCB('{!officeKey.officeId}');return false;" />
+																			      				&nbsp;|&nbsp;
+																			      				<apex:commandLink value="Active" onclick="setActiveCB('{!officeKey.officeId}');return false;" />
+																			      				&nbsp;|&nbsp;
+																			      				<apex:commandLink value="Inactive" onclick="setInactiveCB('{!officeKey.officeId}');return false;" />																	      				
+																								
+																							</div>
+																							<div class="col-sm-6">
+																								CLEAR:&nbsp;
+																			      				<apex:commandLink value="All" onclick="clearAllCB('{!officeKey.officeId}');return false;" />
+																			      				&nbsp;|&nbsp;
+																			      				<apex:commandLink value="Active" onclick="clearActiveCB('{!officeKey.officeId}');return false;" />
+																			      				&nbsp;|&nbsp;
+																			      				<apex:commandLink value="Inactive" onclick="clearInactiveCB('{!officeKey.officeId}');return false;" />
+											    											</div>
+										    																													      
+																				        	<div style="width:100%">
+																				        		<table id="tbl{!officeKey.officeId}" class="display table table-striped table-bordered table-responsive table-condensed fbody" >
+																					        		<apex:repeat value="{!empData[officeKey.officeId]}" var="rec">   
+																					                 	 
+																					            		<tr class='emp_{!rec.empStatus}'>
+																					                     	<td style="width:300px">
+																					                     		<apex:inputCheckbox value="{!rec.isSelected}" styleClass="empId{!officeKey.officeId} empId{!rec.empStatus}_{!officeKey.officeId}"/>
+																					                     		&nbsp;<apex:outputText value="{!rec.empName}" style="{!if(rec.empStatus ='Inactive','color:red;','color:black')}"/>
+																					                     		
+																					                     	</td>
+																					                     	<td style="width:85px"> 
+																					                     		<apex:outputText value="{0,date, MM/dd/yyyy}">
+																					                     			<apex:param value="{!rec.hireDate}" />
+																					                     		</apex:outputText>
+																					                     	</td>
+																					                     	<td><apex:outputText value="{!rec.empStatus}"/></td>
+																					                    </tr>                    
+							
+																					             	</apex:repeat>
+																				             	</table> 
+																					       </div>					      
+					 																	</div>
+				    															    </div>
+																	  		  </div>
+																		</apex:repeat>
+																	</div>
+																</apex:outputPanel>
+															</div>
+														</div>
+														
+																						
+									                	
+	
+	
+														<div class="col-lg-6" > 							                    		
+				 								            <div class="panel panel-primary" style="height:95%;padding:10px;" id="test">
+			
+				 								            	<h5>Hire Date:</h5><br/><br/>
+	
+				 								            	<table>
+											                    	<tr style="margin-bottom: 4px;">
+											                    		<td><label  class="control-label parametersFont" >From:&nbsp;</label></td>
+											                    		<td><apex:inputField styleClass="searchInput searchFrom" value="{!setupRec.val_Hire_Start__c}" id="Hire_Dt_Start"/></td>
+											                    	</tr>
+											                    	<tr>
+											                    		<td><label class="control-label parametersFont" >To:&nbsp;</label></td>
+											                    		<td><apex:inputField styleClass="searchInput searchTo" value="{!setupRec.val_Hire_End__c}" id="Hire_Dt_End" /></td>
+											                    	</tr>
+										                    	</table>
+																
+																<hr/>
+																<div align="center"><h4>- Overall Report Filters -</h4></div>
+				 								            	
+										                    	<table class="table table-bordered">
+										                    	<tr>
+										                    		<td>&nbsp;</td>
+										                    		<td>Min</td>
+										                    		<td>Max</td>
+										                    		<td>Active</td>
+										                    	</tr>
+										                    	<tr> 
+											                  		<td><label class="control-label parametersFont" >Attrition Rate:&nbsp;</label></td>
+											                  		<td><apex:inputField style="width:50px;" value="{!setupRec.val_Attrition_Rate_Min__c}" /></td>
+											                  		<td><apex:inputField style="width:50px;" value="{!setupRec.val_Attrition_Rate_Max__c}" /></td>
+											                  		<td><div id="swAttrition"></div><apex:inputField style="width:50px;" value="{!setupRec.filter_Attrition__c}" /></td>
+											                  	</tr>
+											                  	  
+										                  		<tr>
+										                  			<td><label class="control-label parametersFont" >% Thrilled:&nbsp;</label></td>
+										                  			<td><apex:inputField style="width:50px;" value="{!setupRec.val_Thrilled_Min__c}" /></td>
+										                  			<td><apex:inputField style="width:50px;" value="{!setupRec.val_Thrilled_Max__c}" /></td>
+										                  			<td><div id="swThrilled"></div><apex:inputField style="width:50px;" value="{!setupRec.filter_Thrilled__c}" /></td>
+										                  		</tr>
+										                  		<tr>
+										                  			<td><label class="control-label parametersFont" >Net Promoter Score:&nbsp;</label></td>
+										                  			<td><apex:inputField style="width:50px;" value="{!setupRec.val_Net_Promoter_Min__c}" /></td>
+										                  			<td><apex:inputField style="width:50px;" value="{!setupRec.val_Net_Promoter_Max__c}" /></td>
+										                  			<td><div id="swPromoter"></div><apex:inputField style="width:50px;" value="{!setupRec.filter_Promoter__c}" /></td>
+										                  		</tr>   
+										                  		<tr>
+										                  			<td><label class="control-label parametersFont" >Job Costing %:&nbsp;</label></td>
+										                  			<td><apex:inputField style="width:50px;" value="{!setupRec.val_Job_Costing_Min__c}" /></td>
+										                  			<td><apex:inputField style="width:50px;" value="{!setupRec.val_Job_Costing_Max__c}" /></td>
+										                  			<td><div id="swJobCosting"></div><apex:inputField style="width:50px;" value="{!setupRec.filter_Job_Costing__c}" /></td>
+										                  		</tr>					                    	
+										                  		<tr>
+										                  			<td><label class="control-label parametersFont" >MPU Score Avg %:&nbsp;</label></td>
+										                  			<td><apex:inputField style="width:50px;" value="{!setupRec.val_MPU_Score_Min__c}" /></td>
+										                  			<td><apex:inputField style="width:50px;" value="{!setupRec.val_MPU_Score_Max__c}" /></td>
+										                  			<td><div id="swMPU"></div><apex:inputField style="width:50px;" value="{!setupRec.filter_MPU__c}" /></td>
+										                  		</tr>									                    	
+										                    	</table>
+										                    	<br/><br/>
+										                    	<div align="center">
+										                    		<apex:actionFunction name="saveFilterSettings" action="{!applyFilters}" status="Loading" />
+						                    						<apex:commandButton value="Apply" onclick="applydxFilters();return false;" Styleclass="btn btn-xs btn-success" />
+										                    		
+										                    	</div>		 								            	
+								                    		</div>							          
+							                    		</div>
+							                    										                        				                    		
+							                    	</div>  <!-- end class row -->
+						                    	</div>	<!--  end container -->		
+						                    </div>					        
+
+							        </div>
+							        <div class="tab-pane" id="tab_b">
+						                    <div class="panel panel-default panelNoBorder panelShade">
+						                    	<div class="container-fluid">
+							                    	<div class="row">
+						                        		<div class="sectionHeading">Select the fields you would like to display on the PRO report:</div>	
+						                        		<div class="col-lg-12">				                        						                        
+														<table id="tblFields" >
+														    <thead>
+														        <tr>
+														            <th>Jobs and Attendance</th>
+														            <th>Performance</th>
+														            <th>Information</th>
+														        </tr>
+														    </thead>
+														    <tbody>
+														        <tr>
+														            <td><apex:inputField value="{!setupRec.fld_Num_Jobs_Completed__c}" />&nbsp;# of Jobs Completed</td>
+														            <td><apex:inputField value="{!setupRec.fld_Attrition_Rate__c}" />&nbsp;Attrition Rate</td>
+														            <td><apex:inputField value="{!setupRec.fld_First_Name__c}" />&nbsp;First Name</td>
+														        </tr>
+														        <tr>
+														            <td><apex:inputField value="{!setupRec.fld_num_Recleans_Caused__c}" />&nbsp;# of Re-cleans Caused</td>
+														            <td><apex:inputField value="{!setupRec.fld_Percent_Thrilled__c}" />&nbsp;Percentage of Thrilled</td>												            
+														            <td><apex:inputField value="{!setupRec.fld_Last_Name__c}" />&nbsp;Last Name</td>
+														        </tr>
+														        <tr>
+														            <td><apex:inputField value="{!setupRec.fld_Min_Hrs_Requested__c}" />&nbsp;Minimum Hours Requested</td>
+														            <td><apex:inputField value="{!setupRec.fld_Net_Promoter_Score__c}" />&nbsp;Net Promoter %</td>									            
+														            <td><apex:inputField value="{!setupRec.fld_Full_Name__c}" />&nbsp;Full Name</td>
+														        </tr>
+														        <tr>
+														            <td><apex:inputField value="{!setupRec.fld_Total_Hrs_Rcvd__c}" />&nbsp;Total Hours Received</td>
+														            <td><apex:inputField value="{!setupRec.fld_Job_Costing_Percentage__c}" />&nbsp;Job Costing %</td>
+														            <td><apex:inputField value="{!setupRec.fld_Auto_Ins_Exp__c}" />&nbsp;Auto Insurance Expiration</td>												        
+														        </tr>
+														        <tr>
+														            <td><apex:inputField value="{!setupRec.fld_Delta_From_Min_Hours__c}" />&nbsp;Delta From Minimum Hours</td>
+														            <td><apex:inputField value="{!setupRec.fld_Over_Under_Delta__c}" />&nbsp;Over/Under Delta</td>
+														            <td><apex:inputField value="{!setupRec.fld_Drivers_Lic_Exp__c}" />&nbsp;Drivers License Expiration</td>													        
+														        </tr>
+														        <tr>															        													        														       
+														            <td><apex:inputField value="{!setupRec.fld_Num_Excused_absences__c}" />&nbsp;Number of Excused Absences</td>
+														            <td><apex:inputField value="{!setupRec.fld_MPU_Score_Avg__c}" />&nbsp;MPU Score Average</td>
+														            <td><apex:inputField value="{!setupRec.fld_Status__c}" />&nbsp;Status</td>													        
+														        </tr>
+														        <tr>															        													        														       
+														            <td><apex:inputField value="{!setupRec.fld_Num_Unexcused_Absenses__c}" />&nbsp;Number of Unexcused Absenses</td>
+														            <td>&nbsp;</td>
+														            <td><apex:inputField value="{!setupRec.fld_hire_date__c}" />&nbsp;Hire Date</td>												        
+														        </tr>
+														        <tr>															        													        														       
+														            <td>&nbsp;</td>
+														            <td>&nbsp;</td>
+														            <td><apex:inputField value="{!setupRec.fld_Tot_Days_Employed__c}" />&nbsp;Total Days Employed</td>											        
+														        </tr>													        
+														        <tr>															        													        														       
+														            <td>&nbsp;</td>
+														            <td>&nbsp;</td>
+														            <td><apex:inputField value="{!setupRec.fld_tot_days_Emp_Grouping__c}" />&nbsp;Total Days Employed Grouping</td>												        
+														        </tr>	
+													        											        
+														        <tr>															        													        														       
+														            <td>&nbsp;</td>
+														            <td>&nbsp;</td>
+														            <td><apex:inputField value="{!setupRec.fld_Recruiting_Src__c}" />&nbsp;Recruiting Source</td>											        
+														        </tr>												        														        												            
+		         
+														    </tbody>
+														</table>
+														
+														</div>					                        
+							                        </div>
+							                    </div>
+							                 
+						                    </div>
+					                    	<div align="center">
+					                    		<apex:actionFunction name="applySetting1" action="{!applyEmpInfo}" status="Loading" />
+					                    		<apex:commandButton value="Apply" onclick="applySetting1();return false;" Styleclass="btn btn-xs btn-success" />
+					                    		
+					                    	</div>
+							        </div>
+							        <div class="tab-pane" id="tab_c">
+						                    <div class="panel panel-default panelNoBorder panelShade">
+						                    	<div class="container-fluid">
+							                    	<div class="row">
+						                        		<div class="sectionHeading">Field Ordering:</div>
+						                        		<div class="sectionSubHeading">Use the arrow icons to the left of each field name to move order up or down.  <br/> (NOTE: Fields shaded in gray are currently set as not visible in the field selection tab in setup)</div>	
+						                        		<div class="col-lg-12">						                    					                       
+									                        <div class="panel panel-default">									                        	
+									                        	<div id="simpleDiv" class="simpleDiv"></div>				                        
+									                        </div> 
+									                    	<div align="center" style="margin-bottom:10px;">
+									                    		<apex:actionFunction name="updateFields" action="{!updateFieldOrder}" status="Loading" />
+									                    		<apex:commandButton value="Apply" onclick="applyFieldOrder();return false;" Styleclass="btn btn-xs btn-success" />									                    		
+									                    	</div>
+									                    </div>
+									                </div>
+									            </div>
+									        </div> 
+							        </div>
+
+							</div><!-- tab content -->
+														
+
+						</div>
+					</div>
+				
+		     </div>
+		    </div>
+		
+		  </div>
+		</div> 
+		 
+        <div class="panel panel-primary">
+            <div class="panel-heading text-center">
+                <h3 class="panel-title">PRO Review Report</h3>                
+                <button type="button" class="btn btn-info btn-sm setupButton" data-toggle="modal" data-target="#rptSetup">
+      				<span class="glyphicon glyphicon-cog"></span> Setup
+      			</button>
+            </div>
+            
+            <!-- TOP SECTION OF PAGE -->
+            
+            <div class="panel-body"> 
+                <div class="container-fluid">
+                  	<div class="row">
+                  		<div align="center" class="col-sm-2">
+                            <div class="form-group" id="startDate">
+                                <label class="control-label parametersFont" for="startDateField">Start Date:&nbsp;</label>
+                                <input class="startDate" style="width:80px;" id="startDateField" type="text" placeholder="Start Date" />
+                            </div>
+
+                            <div class="form-group" id="endDate">
+                                <label class="control-label parametersFont" for="endDateField">End Date:&nbsp;</label>
+                                <input style="width:80px;" id="endDateField" type="text" placeholder="End Date"/>
+                            </div>
+                  		</div> 
+                  		<div class="col-sm-10"> 
+                  			<div align="right" class="row">   
+                  				      	
+		                  		<div id="filter_Attrition" align="center" class="col-sm-2">   
+		                  			<label class="control-label parametersFont" >Attrition Rate</label><br/>
+		                  			<input type="text" id="attrittionMin" style="width:40px;" value="{!setupRec.val_Attrition_Rate_Min__c}" />&nbsp;To&nbsp;
+		                  			<input type="text" id="attritionMax" style="width:40px;" value="{!setupRec.val_Attrition_Rate_Max__c}" />			                  			
+		                  		</div>  
+		                  		<div id="filter_Thrilled" align="center" class="col-sm-2">
+		                  			<label class="control-label parametersFont" >% Thrilled</label><br/>
+		                  			<input type="text" id="thrilledMin" style="width:40px;" value="{!setupRec.val_Thrilled_Min__c}" />&nbsp;To&nbsp;
+		                  			<input type="text" id="thrilledMax" style="width:40px;" value="{!setupRec.val_Thrilled_Max__c}" />		                  			
+		                  		</div>
+		                  		<div id="filter_Promoter" align="center" class="col-sm-2">
+		                  			<label class="control-label parametersFont" >Net Promoter</label><br/>
+		                  			<input type="text" id="netPromoterMin" style="width:40px;" value="{!setupRec.val_Net_Promoter_Min__c}" />&nbsp;To&nbsp;
+		                  			<input type="text" id="netPromoterMax" style="width:40px;" value="{!setupRec.val_Net_Promoter_Max__c}" />		                  			
+		                  		</div>   
+		                  		<div id="filter_Job_Costing" align="center" class="col-sm-2">
+		                  			<label class="control-label parametersFont" >Job Costing %</label><br/>
+		                  			<input type="text" id="jobCostingMin" style="width:40px;" value="{!setupRec.val_Job_Costing_Min__c}" />&nbsp;To&nbsp;
+		                  			<input type="text" id="jobCostingMax" style="width:40px;" value="{!setupRec.val_Job_Costing_Max__c}" />		                  			
+		                  		</div> 
+		                  		<div id="filter_MPU" align="center" class="col-sm-2">
+		                  			<label class="control-label parametersFont" >MPU Score Avg %</label><br/>
+		                  			<input type="text" id="MPUMin" style="width:40px;" value="{!setupRec.val_MPU_Score_Min__c}" />&nbsp;To&nbsp;
+		                  			<input type="text" id="MPUMax" style="width:40px;" value="{!setupRec.val_MPU_Score_Max__c}" />
+		                  		</div>                  		
+		                  		<div align="center" class="col-sm-2">
+		
+			                		<div align="center" valign="middle" style="display:table-cell;width:45%;text-align:left;"><br/>
+			                    		<button id="generate-report-btn" type="button" class="btn btn-xs btn-success">Run</button>			                 
+			                		</div>
+		                  		</div>
+		                  	</div>
+		                 </div>                  		                  		           
+                	</div>                	
+                </div>
+
+       		</div>
+
+        </div>
+        
+        <!--  REPORT SECTION -->
+      	<div id="reportDiv">	            
+			<table id="report-table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+		    	<thead><tr><th>Click Run to View Report</th></tr></thead>
+		    </table>
+		</div>
+       <div class="float_center" id="btnSection"></div>
+       
+	    <div id = "messagePanel" class="panel panel-primary">
+	      <div class="panel-body"><p style="font-size: 15px; font-weight: bold; text-align: center;" id="messageText">To run the report, specify your options and click "Run"</p></div>
+	    </div>       
+       
+    </apex:form>
+  	
+    </div>
+    
+
+        
+    <div id="workingDialog" style="width:200px;height:140px;">
+        <p style="font-size: 18px; font-weight: bold; text-align: center;" >Working...<apex:image value="/img/loading.gif" /></p>
+        <p style="font-size: 15px; font-weight: bold; text-align: center;" id="dialogText"></p>
+    </div>    
+
+ 
+<div class="container-fluid">
+	<div class="modal fade" tabindex="-1" role="dialog" id="detailsModal">
+	  <div class="modal-dialog modal-lg" >
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 id="dtlMHeader" class="modal-title dtlMHeader" ></h4>
+	      </div>
+	      <div class="modal-body">
+	        <div id="dtlMBody"></div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->    
+</div>   
+
+              
+    </body>
+    </html>
+    </apex:page>
